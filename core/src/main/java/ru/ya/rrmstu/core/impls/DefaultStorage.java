@@ -7,12 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.ya.rrmstu.core.abstracts.AbstractTreeNode;
 import ru.ya.rrmstu.core.exceptions.AmountException;
 import ru.ya.rrmstu.core.exceptions.CurrencyException;
 import ru.ya.rrmstu.core.interfaces.Storage;
 
 
-public class DefaultStorage implements Storage {
+public class DefaultStorage extends AbstractTreeNode implements Storage {
 
     private String name;
 
