@@ -15,8 +15,6 @@ import ru.ya.rrmstu.core.interfaces.Storage;
 
 public class DefaultStorage extends AbstractTreeNode implements Storage {
 
-    private String name;
-
     /**
      * Сразу инициализируем пустые коллекции, потому что хоть одна валюта да будет
      **/
@@ -28,21 +26,17 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
     }
 
     public DefaultStorage(String name) {
-        this.name = name;
+        super(name);
+    }
+
+    public DefaultStorage(String name, long id) {
+        super(name, id);
     }
 
     public DefaultStorage(List<Currency> currencyList, Map<Currency, BigDecimal> currencyAmounts, String name) {
+        super(name);
         this.currencyList = currencyList;
         this.currencyAmounts = currencyAmounts;
-        this.name = name;
-    }
-
-    public DefaultStorage(Map<Currency, BigDecimal> currencyAmounts) {
-        this.currencyAmounts = currencyAmounts;
-    }
-
-    public DefaultStorage(List<Currency> currencyList) {
-        this.currencyList = currencyList;
     }
 
     public Map<Currency, BigDecimal> getCurrencyAmounts() {
@@ -194,12 +188,4 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
 
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
