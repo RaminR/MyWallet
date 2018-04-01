@@ -1,4 +1,4 @@
-package ru.ya.rrmstu.core;
+package ru.ya.rrmstu.core.interfaces;
 
 import java.math.BigDecimal;
 import java.util.Currency;
