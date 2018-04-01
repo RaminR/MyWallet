@@ -5,6 +5,9 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 
+import ru.ya.rrmstu.core.exceptions.AmountException;
+import ru.ya.rrmstu.core.exceptions.CurrencyException;
+
 public interface Storage {
 
     String getName();
@@ -17,9 +20,9 @@ public interface Storage {
      */
     Map<Currency, BigDecimal> getCurrencyAmounts();
 
-    BigDecimal getAmount(Currency currency);
+    BigDecimal getAmount(Currency currency) throws CurrencyException;
 
-    BigDecimal getApproxAmount(Currency currency);
+    BigDecimal getApproxAmount(Currency currency) throws CurrencyException;
 
     /**
      * Изменение баланса
@@ -27,11 +30,12 @@ public interface Storage {
      * addAmount()              - Добавить сумму в валюте
      * expenseAmount()          - Отнять сумму в валюте
      */
-    void changeAmount(BigDecimal amount, Currency currency);
+    void changeAmount(BigDecimal amount, Currency currency) throws CurrencyException;
 
-    void addAmount(BigDecimal amount, Currency currency);
+    void addAmount(BigDecimal amount, Currency currency) throws CurrencyException;
 
-    void expenseAmount(BigDecimal amount, Currency currency);
+    void expenseAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException;
+
 
     /**
      * Работа с валютой
@@ -40,11 +44,11 @@ public interface Storage {
      * getCurrency()            - Получить валюту по коду
      * getAvailableCurrencies() - Получить все доступные валюты хранилища в отдельной коллекции
      */
-    void addCurrency(Currency currency);
+    Currency getCurrency(String code) throws CurrencyException;
 
-    void deleteCurrency(Currency currency);
+    void addCurrency(Currency currency) throws CurrencyException;
 
-    Currency getCurrency(String code);
+    void deleteCurrency(Currency currency) throws CurrencyException;
 
     List<Currency> getAvailableCurrencies();
 }
