@@ -1,26 +1,23 @@
 package ru.ya.rrmstu.core;
 
-import java.math.BigDecimal;
-import java.util.Currency;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
+import ru.ya.rrmstu.core.database.SQLiteConnection;
 import ru.ya.rrmstu.core.exceptions.CurrencyException;
 import ru.ya.rrmstu.core.impls.DefaultStorage;
 
 public class Main {
 
     public static void main(String[] args) {
-        try {
-            DefaultStorage defaultStorage = new DefaultStorage();
+        try (Statement stmt = SQLiteConnection.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery("select * from depository")){
 
-            Currency USD = Currency.getInstance("USD");
-            Currency RUB = Currency.getInstance("RUB");
+            while (rs.next()){
+                System.out.println(rs.getString("name"));
+            }
 
-            defaultStorage.addCurrency(RUB);
-            defaultStorage.addAmount(new BigDecimal(2000), RUB);
-
-            System.out.println(defaultStorage.getAmount(RUB));
-
-        } catch (CurrencyException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
