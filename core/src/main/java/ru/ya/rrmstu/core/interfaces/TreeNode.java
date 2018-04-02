@@ -61,4 +61,11 @@ public interface TreeNode {
      */
     void setParent(TreeNode parent);
 
+    /**
+     * Проверяет, есть ли дочерние элементы
+     *
+     * @return
+     */
+    boolean hasChilds();
+
 }

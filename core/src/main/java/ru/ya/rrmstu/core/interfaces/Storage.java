@@ -8,9 +8,7 @@ import java.util.Map;
 import ru.ya.rrmstu.core.exceptions.AmountException;
 import ru.ya.rrmstu.core.exceptions.CurrencyException;
 
-public interface Storage {
-
-    String getName();
+public interface Storage extends TreeNode {
 
     /**
      * Получение баланса (Остаток)
