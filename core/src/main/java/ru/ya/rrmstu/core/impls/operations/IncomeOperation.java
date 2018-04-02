@@ -1,8 +1,6 @@
 package ru.ya.rrmstu.core.impls.operations;
 
-
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Currency;
 
 import ru.ya.rrmstu.core.abstracts.AbstractOperation;
@@ -10,7 +8,7 @@ import ru.ya.rrmstu.core.enums.OperationType;
 import ru.ya.rrmstu.core.interfaces.Source;
 import ru.ya.rrmstu.core.interfaces.Storage;
 
-// TODO для всех классов создать конструкторы без поля id, т.к. оно будет autoincrement
+// доход
 public class IncomeOperation extends AbstractOperation {
 
     public IncomeOperation() {

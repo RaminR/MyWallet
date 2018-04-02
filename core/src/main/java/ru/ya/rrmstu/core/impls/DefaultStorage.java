@@ -12,15 +12,13 @@ import ru.ya.rrmstu.core.exceptions.AmountException;
 import ru.ya.rrmstu.core.exceptions.CurrencyException;
 import ru.ya.rrmstu.core.interfaces.Storage;
 
-
 public class DefaultStorage extends AbstractTreeNode implements Storage {
 
-    /**
-     * Сразу инициализируем пустые коллекции, потому что хоть одна валюта да будет
-     **/
 
-    private Map<Currency, BigDecimal> currencyAmounts = new HashMap<Currency, BigDecimal>();
+    // сразу инициализируем пустые коллекции, потому что хоть одна валюта будет
+    private Map<Currency, BigDecimal> currencyAmounts = new HashMap<>();
     private List<Currency> currencyList = new ArrayList<>();
+
 
     public DefaultStorage() {
     }
@@ -39,6 +37,18 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
         this.currencyAmounts = currencyAmounts;
     }
 
+    public DefaultStorage(Map<Currency, BigDecimal> currencyAmounts) {
+        this.currencyAmounts = currencyAmounts;
+    }
+
+    public DefaultStorage(List<Currency> currencyList) {
+        this.currencyList = currencyList;
+    }
+
+
+
+
+    @Override
     public Map<Currency, BigDecimal> getCurrencyAmounts() {
         return currencyAmounts;
     }
@@ -50,46 +60,20 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
 
     @Override
     public BigDecimal getAmount(Currency currency) throws CurrencyException {
-        checkCurrencyExist(currency);
+//        checkCurrencyExist(currency); // в Spring через AOP легче внедрять повторяющиеся участки кода
         return currencyAmounts.get(currency);
     }
 
 
-    /**
-     * Ручное обновление баланса
-     *
-     * @param amount
-     * @param currency
-     * @throws CurrencyException
-     */
     @Override
-    public void changeAmount(BigDecimal amount, Currency currency) throws CurrencyException {
+    public void updateAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException {
         checkCurrencyExist(currency);
+        checkAmount(amount);// не даем балансу уйти в минус
         currencyAmounts.put(currency, amount);
     }
 
 
-    /**
-     * Добавление денег в хранилище
-     *
-     * @param amount
-     * @param currency
-     * @throws CurrencyException
-     */
-    @Override
-    public void addAmount(BigDecimal amount, Currency currency) throws CurrencyException {
-        checkCurrencyExist(currency);
-        BigDecimal oldAmount = currencyAmounts.get(currency);
-        currencyAmounts.put(currency, oldAmount.add(amount));
-    }
-
-
-    /**
-     * Проверка, есть ли такая валюта в данном хранилище
-     *
-     * @param currency
-     * @throws CurrencyException
-     */
+    // проверка, есть ли такая валюта в данном хранилище
     private void checkCurrencyExist(Currency currency) throws CurrencyException {
         if (!currencyAmounts.containsKey(currency)) {
             throw new CurrencyException("Currency " + currency + " not exist");
@@ -97,49 +81,28 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
     }
 
 
-    /**
-     * Отнимаем деньги из хранилища
-     *
-     * @param amount
-     * @param currency
-     * @throws CurrencyException
-     * @throws AmountException
-     */
-    @Override
-    public void expenseAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException {
-        checkCurrencyExist(currency);
-
-        BigDecimal oldAmount = currencyAmounts.get(currency);
-        BigDecimal newValue = oldAmount.subtract(amount);
-        checkAmount(newValue);// не даем балансу уйти в минус
-        currencyAmounts.put(currency, newValue);
-    }
 
 
-    /**
-     * Сумма не должна быть меньше нуля (в реальности такое невозможно, мы не можем потратить больше того, что есть)
-     *
-     * @param amount
-     * @throws AmountException
-     */
+
+    // сумма не должна быть меньше нуля (в реальности такое невозможно, мы не можем потратить больше того, что есть)
     private void checkAmount(BigDecimal amount) throws AmountException {
 
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new AmountException("Amount can't be < 0");
-        }
+//        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+//            throw new AmountException("Amount can't be < 0");
+//        }
 
     }
 
 
     @Override
-    public void addCurrency(Currency currency) throws CurrencyException {
+    public void addCurrency(Currency currency, BigDecimal initAmount) throws CurrencyException {
 
         if (currencyAmounts.containsKey(currency)) {
             throw new CurrencyException("Currency already exist");// пока просто сообщение на англ, без локализации
         }
 
         currencyList.add(currency);
-        currencyAmounts.put(currency, BigDecimal.ZERO);
+        currencyAmounts.put(currency, initAmount);
 
     }
 
@@ -149,9 +112,9 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
         checkCurrencyExist(currency);
 
         // не даем удалять валюту, если в хранилище есть деньги по этой валюте
-        if (!currencyAmounts.get(currency).equals(BigDecimal.ZERO)) {
-            throw new CurrencyException("Can't delete currency with amount");
-        }
+//        if (!currencyAmounts.get(currency).equals(BigDecimal.ZERO)) {
+//            throw new CurrencyException("Can't delete currency with amount");
+//        }
 
         currencyAmounts.remove(currency);
         currencyList.remove(currency);
@@ -184,8 +147,9 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
             }
         }
 
-        throw new CurrencyException("Currency (ID: " + code + ") not exist in storage");
+        throw new CurrencyException("Currency (code=" + code + ") not exist in storage");
 
     }
+
 
 }

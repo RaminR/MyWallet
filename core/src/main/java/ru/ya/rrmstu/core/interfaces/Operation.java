@@ -4,7 +4,8 @@ import java.util.Calendar;
 
 import ru.ya.rrmstu.core.enums.OperationType;
 
-public interface Operation {
+public interface Operation extends Comparable<Operation> {
+
     long getId();
 
     void setId(long id);

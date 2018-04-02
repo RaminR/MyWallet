@@ -3,9 +3,9 @@ package ru.ya.rrmstu.core.abstracts;
 import java.util.Calendar;
 
 import ru.ya.rrmstu.core.enums.OperationType;
+import ru.ya.rrmstu.core.interfaces.Operation;
 
-public abstract class AbstractOperation {
-
+public abstract class AbstractOperation implements Operation{
 
     private long id;
     private Calendar dateTime; // дата и время выполнения операции (подставлять автоматически при создании, но можно будет изменять в любое время)
@@ -27,6 +27,7 @@ public abstract class AbstractOperation {
         this.id = id;
         this.operationType = operationType;
     }
+
 
 
     public long getId() {
@@ -61,5 +62,10 @@ public abstract class AbstractOperation {
 
     public void setOperationType(OperationType operationType) {
         this.operationType = operationType;
+    }
+
+    @Override
+    public int compareTo(Operation o) {// по-умолчанию сортируе по дате
+        return o.getDateTime().compareTo(dateTime);
     }
 }

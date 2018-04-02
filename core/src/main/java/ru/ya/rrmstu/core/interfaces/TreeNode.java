@@ -2,72 +2,32 @@ package ru.ya.rrmstu.core.interfaces;
 
 import java.util.List;
 
-/**
- * Позволяет создать древовидную структуру из любого набора объектов, которые реализуют интерфейс TreeNode
- * Паттерн "Компоновщик" - вольная реализация
- */
-
+// позволяет создать древовидную структуру из любого набора объектов, которые реализуют интерфейс TreeNode
+// паттерн "Компоновщик" - вольная реализация
 public interface TreeNode {
 
     String getName();
 
-    /**
-     * Каждый элемент дерева должен иметь свой уникальный идентификатор
-     *
-     * @return
-     */
-    long getId();
+    long getId(); // каждый элемент дерева должен иметь свой уникальный идентификатор
+
+    void setId(long id); // установить id
 
     long getParentId();
 
-    /**
-     * Добавить один дочерний элемент
-     *
-     * @param child
-     */
-    void add(TreeNode child);
+    void add(TreeNode child); // добавить один дочерний элемент
 
-    /**
-     * Удалить один дочерний элемент
-     *
-     * @param child
-     */
-    void remove(TreeNode child);
+    void remove(TreeNode child); // удалить один дочерний элемент
 
-    /**
-     * Дочерних элементов может быть любое количество
-     *
-     * @return
-     */
-    List<TreeNode> getChilds();
+    List<TreeNode> getChilds(); // дочерних элементов может быть любое количество
 
-    /**
-     * Получение дочернего элемента по id
-     *
-     * @param id
-     * @return
-     */
-    TreeNode getChild(long id);
+    TreeNode getChild(long id); // получение дочернего элемента по id
 
-    /**
-     * Получение родительского элемента - пригодится в разных ситуациях, например для отчетности по всем узлам дерева
-     *
-     * @return
-     */
-    TreeNode getParent();
+    TreeNode getParent(); // получение родительского элемента - пригодится в разных ситуациях, например для отчетности по всем узлам дерева
 
-    /**
-     * Установка родительского элемента
-     *
-     * @param parent
-     */
-    void setParent(TreeNode parent);
+    void setParent(TreeNode parent);	// установка родительского элемента
 
-    /**
-     * Проверяет, есть ли дочерние элементы
-     *
-     * @return
-     */
-    boolean hasChilds();
+    boolean hasChilds(); // проверяет, есть ли дочерние элементы
+
+    boolean hasParent(); // проверяет, есть ли родитель
 
 }

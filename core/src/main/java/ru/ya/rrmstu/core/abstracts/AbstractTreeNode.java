@@ -1,15 +1,13 @@
 package ru.ya.rrmstu.core.abstracts;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.ya.rrmstu.core.interfaces.TreeNode;
 
-
 public abstract class AbstractTreeNode implements TreeNode {
 
-    private long id;
+    private long id = -1;// начальное значение id для нового создаваемого объекта, нужно чтобы можно было откатывать изменение в коллекции
     private List<TreeNode> childs = new ArrayList<>();
     private TreeNode parent;
     private String name;
@@ -69,6 +67,7 @@ public abstract class AbstractTreeNode implements TreeNode {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
@@ -76,8 +75,8 @@ public abstract class AbstractTreeNode implements TreeNode {
     @Override
     public TreeNode getChild(long id) {
 
-        for (TreeNode child : childs) {
-            if (child.getId() == id) {
+        for (TreeNode child: childs) {
+            if (child.getId() == id){
                 return child;
             }
         }
@@ -85,16 +84,16 @@ public abstract class AbstractTreeNode implements TreeNode {
         return null;
     }
 
-    /**
-     * Если есть дочерние элементы - вернуть true
-     *
-     * @return
-     */
+
     @Override
-    public boolean hasChilds() {
-        return !childs.isEmpty();
+    public boolean hasChilds(){
+        return !childs.isEmpty();// если есть дочерние элементы - вернуть true
     }
 
+    @Override
+    public boolean hasParent() {
+        return parent!=null;// если есть родитель - вернет true
+    }
 
     @Override
     public String toString() {

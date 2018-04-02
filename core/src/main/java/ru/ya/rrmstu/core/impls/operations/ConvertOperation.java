@@ -1,14 +1,13 @@
 package ru.ya.rrmstu.core.impls.operations;
 
-
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Currency;
 
 import ru.ya.rrmstu.core.abstracts.AbstractOperation;
 import ru.ya.rrmstu.core.enums.OperationType;
 import ru.ya.rrmstu.core.interfaces.Storage;
 
+// конвертация - перевод из одного хранилища в другое в разной валюте
 public class ConvertOperation extends AbstractOperation {
 
     public ConvertOperation() {

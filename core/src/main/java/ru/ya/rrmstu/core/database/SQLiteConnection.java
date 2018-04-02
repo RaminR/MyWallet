@@ -8,21 +8,27 @@ import java.util.logging.Logger;
 
 public class SQLiteConnection {
 
-    private static Connection connection;
+    private static Connection con;
 
-    public static Connection getConnection() {
+    public static Connection getConnection(){
         try {
 
-            Class.forName("org.sqlite.JDBC").newInstance();
+            Class.forName("org.sqlite.JDBC").newInstance();// можно эту строчку удалить - драйвер автоматически будет найден
 
-            /** создание подключение к базе данных по пути, указанному в урле **/
+            // создание подключение к базе данных по пути, указанному в урле
             String url = "jdbc:sqlite:c:\\Users\\HOME\\Desktop\\wallet.db";
-            if (connection == null) connection = DriverManager.getConnection(url);
 
-            return connection;
+            if (con==null){
+                con = DriverManager.getConnection(url);
+            }
+            con.createStatement().execute("PRAGMA foreign_keys = ON");
+            con.createStatement().execute("PRAGMA encoding = \"UTF-8\"");
+            return con;
+
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(SQLiteConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return null;
     }
 

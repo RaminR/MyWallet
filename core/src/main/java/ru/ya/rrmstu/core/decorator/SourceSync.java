@@ -1,6 +1,5 @@
 package ru.ya.rrmstu.core.decorator;
 
-
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import ru.ya.rrmstu.core.interfaces.Source;
 import ru.ya.rrmstu.core.utils.TreeUtils;
 
 public class SourceSync implements SourceDAO {
+
     private TreeUtils<Source> treeUtils = new TreeUtils();// построитель дерева
 
     // Все коллекции хранят ссылки на одни и те же объекты, но в разных "срезах"
@@ -74,15 +74,43 @@ public class SourceSync implements SourceDAO {
     public boolean delete(Source source) {
         // TODO добавить нужные Exceptions
         if (sourceDAO.delete(source)) {
-            identityMap.remove(source.getId());
-            if (source.getParent()!=null) {// если удаляем дочерний элемент
-                source.getParent().remove(source);// т.к. у каждого дочернего элемента есть ссылка на родительский - можно быстро удалять элемент из дерева без поиска по всему дереву
-            }else{// если удаляем элемент, у которого нет родителей
-                sourceMap.get(source.getOperationType()).remove(source);
-                treeList.remove(source);
-            }
+            removeFromCollections(source);
 
             return true;
+        }
+        return false;
+    }
+
+    private void addToCollections(Source source) {
+        identityMap.put(source.getId(), source);
+
+        if (source.hasParent()) {
+            if (!source.getParent().getChilds().contains(source)) {// если ранее не был добавлен уже
+                source.getParent().add(source);
+            }
+        } else {// если добавляем элемент, у которого нет родителей (корневой)
+            sourceMap.get(source.getOperationType()).add(source);
+            treeList.add(source);
+        }
+    }
+
+    private void removeFromCollections(Source source) {
+        identityMap.remove(source.getId());
+
+        if (source.hasParent()) {// если удаляем дочерний элемент
+            source.getParent().remove(source);// т.к. у каждого дочернего элемента есть ссылка на родительский - можно быстро удалять элемент из дерева без поиска по всему дереву
+        } else {// если удаляем элемент, у которого нет родителей
+            sourceMap.get(source.getOperationType()).remove(source);
+            treeList.remove(source);
+        }
+    }
+
+    @Override
+    public boolean add(Source source) {
+        if (sourceDAO.add(source)) {// если в БД добавился нормально
+            addToCollections(source);
+            return true;
+
         }
         return false;
     }
@@ -97,5 +125,9 @@ public class SourceSync implements SourceDAO {
     // если понадобится напрямую получить объекты из БД - можно использовать sourceDAO
     public SourceDAO getSourceDAO() {
         return sourceDAO;
+    }
+
+    public Map<Long, Source> getIdentityMap() {
+        return identityMap;
     }
 }

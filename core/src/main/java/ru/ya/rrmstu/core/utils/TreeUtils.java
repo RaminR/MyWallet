@@ -31,6 +31,7 @@ public class TreeUtils<T extends TreeNode> {
     }
 
 
+
     // рекурсивно проходит по всем дочерним элементам
     private TreeNode recursiveSearch(long parentId, TreeNode child) {
         for (TreeNode node : child.getChilds()) {

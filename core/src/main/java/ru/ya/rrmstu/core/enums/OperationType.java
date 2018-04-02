@@ -7,7 +7,7 @@ public enum OperationType {
 
     INCOME(1), OUTCOME(2), TRANSFER(3), CONVERT(4); // нумерация id - как в таблице
 
-    private static Map<Integer, OperationType> map = new HashMap<>();
+    private static Map<Integer, OperationType> map = new HashMap<Integer, OperationType>();
 
     static {
         for (OperationType oper : OperationType.values()) {
@@ -28,4 +28,6 @@ public enum OperationType {
     public static OperationType getType(int id) {
         return map.get(id);
     }
+
+
 }

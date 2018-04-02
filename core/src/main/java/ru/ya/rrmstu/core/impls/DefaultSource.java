@@ -7,7 +7,9 @@ import ru.ya.rrmstu.core.interfaces.Source;
 import ru.ya.rrmstu.core.interfaces.TreeNode;
 import ru.ya.rrmstu.core.enums.OperationType;
 
+
 public class DefaultSource extends AbstractTreeNode implements Source {
+
     private OperationType operationType;
 
     public DefaultSource() {
@@ -41,7 +43,9 @@ public class DefaultSource extends AbstractTreeNode implements Source {
     }
 
     public void setOperationType(OperationType operationType) {
-        this.operationType = operationType;
+        if (!hasParent()) {// если есть родитель - то оставить его OperationType - можно также выбрасывать исключение, если не совпадают типы
+            this.operationType = operationType;
+        }
     }
 
     @Override
@@ -49,11 +53,18 @@ public class DefaultSource extends AbstractTreeNode implements Source {
 
         // TODO применить паттерн
         // для дочернего элемента устанавливаем тип операции родительского элемента
-        if (child instanceof DefaultSource) {
-            ((DefaultSource) child).setOperationType(operationType);
+        if (child instanceof DefaultSource){
+            ((DefaultSource)child).setOperationType(operationType);
         }
 
         super.add(child);
     }
 
+    @Override
+    public void setParent(TreeNode parent) {
+        if (parent instanceof DefaultSource){
+            operationType = ((DefaultSource)parent).getOperationType();// при установке родителя - автоматически проставляем тип операции как у родителя
+        }
+        super.setParent(parent);
+    }
 }

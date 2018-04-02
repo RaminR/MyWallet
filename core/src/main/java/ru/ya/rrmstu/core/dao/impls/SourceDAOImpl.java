@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,14 +17,12 @@ import ru.ya.rrmstu.core.impls.DefaultSource;
 import ru.ya.rrmstu.core.interfaces.Source;
 
 
-//TODO можно реализовать общий абстрактный класс и вынести туда общие методы (getAll, delete и пр.
+//TODO можно реализовать общий абстрактный класс и вынести туда общие методы (getAll, delete и пр.)
+// реализация DAO не должна заниматься лишними делами - только связь с БД, заполнение объектов
 public class SourceDAOImpl implements SourceDAO {
 
     private static final String SOURCE_TABLE = "source";
-    /**
-     * Хранит все элементы сплошным списком, без разделения по деревьям и пр.
-     **/
-    private List<Source> sourceList = new ArrayList<>();
+    private List<Source> sourceList = new ArrayList<>();// хранит все элементы сплошным списком, без разделения по деревьям и пр.
 
 
     @Override
@@ -119,6 +118,40 @@ public class SourceDAOImpl implements SourceDAO {
         return false;
     }
 
+    @Override
+    // добавляет объект в БД и присваивает ему сгенерированный id
+    public boolean add(Source source) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + SOURCE_TABLE + "(name, parent_id, operation_type_id) values(?,?,?)", Statement.RETURN_GENERATED_KEYS);) {
+
+            stmt.setString(1, source.getName());
+
+            if (source.hasParent()){
+                stmt.setLong(2, source.getParent().getId());
+            }else{
+                stmt.setNull(2, Types.BIGINT);
+            }
+
+            stmt.setLong(3, source.getOperationType().getId());
+
+            if (stmt.executeUpdate() == 1) {// если объект добавился нормально
+                try (ResultSet rs = stmt.getGeneratedKeys()) {// получаем id вставленной записи
+
+                    if (rs.next()) {
+                        source.setId(rs.getLong(1));// не забываем просвоить новый id в объект
+                    }
+
+                    return true;
+                }
+
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(SourceDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return false;
+    }
+
 
     @Override
     public List<Source> getList(OperationType operationType) {
@@ -150,4 +183,3 @@ public class SourceDAOImpl implements SourceDAO {
         return null;
     }
 }
-

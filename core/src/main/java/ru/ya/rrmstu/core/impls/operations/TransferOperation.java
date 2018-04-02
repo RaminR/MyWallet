@@ -7,7 +7,8 @@ import ru.ya.rrmstu.core.abstracts.AbstractOperation;
 import ru.ya.rrmstu.core.enums.OperationType;
 import ru.ya.rrmstu.core.interfaces.Storage;
 
-public class TransferOperation extends AbstractOperation {
+// перевод из одного хранилища в другое в одной валюте
+public class TransferOperation extends AbstractOperation{
 
     public TransferOperation() {
         super(OperationType.TRANSFER);
