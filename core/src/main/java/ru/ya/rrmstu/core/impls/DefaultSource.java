@@ -5,7 +5,7 @@ import java.util.List;
 import ru.ya.rrmstu.core.abstracts.AbstractTreeNode;
 import ru.ya.rrmstu.core.interfaces.Source;
 import ru.ya.rrmstu.core.interfaces.TreeNode;
-import ru.ya.rrmstu.core.objects.OperationType;
+import ru.ya.rrmstu.core.enums.OperationType;
 
 public class DefaultSource extends AbstractTreeNode implements Source {
     private OperationType operationType;

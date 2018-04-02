@@ -31,7 +31,7 @@ public class StorageDAOImpl implements StorageDAO {
     public boolean addCurrency(Storage storage, Currency currency) {
 
         // для автоматического закрытия ресурсов
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + CURRENCY_TABLE + "(currency_code, depository_id, amount) values(?,?,?)");) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("insert into " + CURRENCY_TABLE + "(currency_code, depository_id, amount) values(?,?,?)")) {
 
             stmt.setString(1, currency.getCurrencyCode());
             stmt.setLong(2, storage.getId());
@@ -53,7 +53,7 @@ public class StorageDAOImpl implements StorageDAO {
     @Override
     public boolean deleteCurrency(Storage storage, Currency currency) {
         // TODO реализовать - если есть ли операции по данной валюте - запрещать удаление
-        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("delete from " + CURRENCY_TABLE + " where storage_id=? and currency_code=?");) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("delete from " + CURRENCY_TABLE + " where depository_id=? and currency_code=?");) {
 
             stmt.setLong(1, storage.getId());
             stmt.setString(2, currency.getCurrencyCode());
@@ -71,7 +71,20 @@ public class StorageDAOImpl implements StorageDAO {
     }
 
     @Override
-    public boolean updateAmount(Storage storage, BigDecimal amount) {
+    public boolean updateAmount(Storage storage, Currency currency, BigDecimal amount) {
+        try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("update " + STORAGE_TABLE + " set name=? where id=?");) {
+
+            stmt.setString(1, storage.getName());
+            stmt.setLong(2, storage.getId());
+
+            if (stmt.executeUpdate() == 1) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(StorageDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+
         return false;
     }
 
@@ -144,6 +157,5 @@ public class StorageDAOImpl implements StorageDAO {
 
         return false;
     }
-
 
 }
