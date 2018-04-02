@@ -24,16 +24,9 @@ public interface Storage extends TreeNode {
 
     /**
      * Изменение баланса
-     * changeAmount()           - Изменение баланса по определеной валюте
-     * addAmount()              - Добавить сумму в валюте
-     * expenseAmount()          - Отнять сумму в валюте
+     * updateAmount()           - Изменение баланса по определеной валюте
      */
-    void changeAmount(BigDecimal amount, Currency currency) throws CurrencyException;
-
-    void addAmount(BigDecimal amount, Currency currency) throws CurrencyException;
-
-    void expenseAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException;
-
+    void updateAmount(BigDecimal amount, Currency currency) throws CurrencyException, AmountException;
 
     /**
      * Работа с валютой
