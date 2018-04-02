@@ -18,6 +18,8 @@ public interface TreeNode {
      */
     long getId();
 
+    long getParentId();
+
     /**
      * Добавить один дочерний элемент
      *
