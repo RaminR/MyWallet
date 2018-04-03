@@ -88,8 +88,6 @@ public class StorageSync implements StorageDAO {
     }
 
 
-
-
     // удаляет объект из всех коллекций
     private void removeFromCollections(Storage storage) {
         identityMap.remove(storage.getId());
@@ -106,7 +104,7 @@ public class StorageSync implements StorageDAO {
         if (storageDAO.add(storage)) {// если в БД добавилось нормально
             addToCollections(storage);
             return true;
-        }else{// откатываем добавление
+        } else {// откатываем добавление
             // для отката можно использовать паттерн Command (для функции Undo)
         }
 

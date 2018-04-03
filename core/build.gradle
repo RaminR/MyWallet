@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'org.xerial:sqlite-jdbc:3.+'
+   // compile 'org.xerial:sqlite-jdbc:3.+'
 }
 
 sourceCompatibility = "1.8"
