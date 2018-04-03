@@ -1,4 +1,4 @@
-package ru.ya.rrmstu.mywallet;
+package ru.ya.rrmstu.mywallet.app;
 
 import android.app.Application;
 import android.content.Context;
