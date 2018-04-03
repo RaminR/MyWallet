@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import ru.ya.rrmstu.core.database.Initializer;
+import ru.ya.rrmstu.core.enums.OperationType;
 import ru.ya.rrmstu.mywallet.R;
 
 public class MainActivity extends AppCompatActivity
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        Initializer.getOperationSync().getList(OperationType.INCOME);
     }
 
     @Override

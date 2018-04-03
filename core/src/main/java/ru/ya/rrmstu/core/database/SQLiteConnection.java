@@ -9,27 +9,40 @@ import java.util.logging.Logger;
 public class SQLiteConnection {
 
     private static Connection con;
+    private static String urlConnection;
+    private static String driverClassName;
+    
+    public static void init(String driverName, String url) {
+        urlConnection = url;
+        driverClassName = driverName;
+        createConnection();
+    }
 
-    public static Connection getConnection(){
+    private static void createConnection() {
         try {
 
-            Class.forName("org.sqlite.JDBC").newInstance();// можно эту строчку удалить - драйвер автоматически будет найден
+            Class.forName(driverClassName).newInstance();
 
-            // создание подключение к базе данных по пути, указанному в урле
-            String url = "jdbc:sqlite:c:\\Users\\HOME\\Desktop\\wallet.db";
+            if (con == null) {
 
-            if (con==null){
-                con = DriverManager.getConnection(url);
+                con = DriverManager.getConnection(urlConnection);
+                con.createStatement().execute("PRAGMA foreign_keys = ON");
+                con.createStatement().execute("PRAGMA encoding = \"UTF-8\"");
             }
-            con.createStatement().execute("PRAGMA foreign_keys = ON");
-            con.createStatement().execute("PRAGMA encoding = \"UTF-8\"");
-            return con;
 
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(SQLiteConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return null;
     }
 
+    public static Connection getConnection() {
+        try {
+            if (con == null || con.isClosed()) {
+                createConnection();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return con;
+    }
 }
