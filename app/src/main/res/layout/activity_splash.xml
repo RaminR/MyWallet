@@ -31,7 +31,7 @@
         android:layout_below="@id/text_loading"
         android:layout_centerHorizontal="true"
         android:indeterminateDuration="1500"
-        gpb:type="folding_circles" />
+        gpb:type="chrome_floating_circles" />
 
 
 </RelativeLayout>
