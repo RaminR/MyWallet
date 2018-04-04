@@ -47,19 +47,15 @@ public class MainActivity extends AppCompatActivity
         initNavigationDrawer(toolbar);
 
 
-        initFragment();
-
-
-    }
-
-    private void initFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         sprListFragment = new SprListFragment();
         fragmentTransaction.replace(R.id.spr_list_fragment, sprListFragment);
 
-        // fragmentTransaction.addToBackStack(null);
+// fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+
     }
 
     private void initToolbar() {
@@ -72,16 +68,16 @@ public class MainActivity extends AppCompatActivity
         backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (selectedNode.getParent() == null) {// показать корневые элементы
                     sprListFragment.updateData(Initializer.getSourceSync().getAll());
                     toolbarTitle.setText(R.string.sources);
+                    backIcon.setVisibility(View.INVISIBLE);
                 } else {// показать родительские элементы
-                    sprListFragment.updateData(selectedNode.getParent().getChilds());//
+                    sprListFragment.updateData(selectedNode.getParent().getChilds());
                     selectedNode = selectedNode.getParent();
                     toolbarTitle.setText(selectedNode.getName());
-                }
 
+                }
 
             }
         });
@@ -172,6 +168,7 @@ public class MainActivity extends AppCompatActivity
         this.selectedNode = selectedNode;
         if (selectedNode.hasChilds()) {
             toolbarTitle.setText(selectedNode.getName());// показывает выбранную категорию
+            backIcon.setVisibility(View.VISIBLE);
         }
     }
 

@@ -47,6 +47,8 @@ public class SprListFragment extends Fragment {
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static SprListFragment newInstance(int columnCount) {
+
+
         SprListFragment fragment = new SprListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
@@ -123,3 +125,4 @@ public class SprListFragment extends Fragment {
         void onListFragmentInteraction(TreeNode selectedNode);
     }
 }
+

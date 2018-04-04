@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -40,24 +41,32 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final TreeNode node = list.get(position);
+        TreeNode node = list.get(position);
 
         holder.tvSprName.setText(node.getName());
+
+        if (node.getChilds() != null && !node.getChilds().isEmpty()) {
+            holder.tvChildCount.setText(String.valueOf(node.getChilds().size()));
+        } else {
+            holder.tvChildCount.setText("");
+        }
 
 
         holder.layoutMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                TreeNode treeNode = list.get(position);
                 if (null != clickListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    clickListener.onListFragmentInteraction(node);
+                    clickListener.onListFragmentInteraction(treeNode);
                 }
 
-                if (node.hasChilds()) {// если есть дочерние значения
-                    updateData(node.getChilds());
+
+                if (treeNode.hasChilds()) {// если есть дочерние значения
+                    updateData(treeNode.getChilds());
                 }
+
             }
         });
     }
@@ -67,6 +76,7 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
         return list.size();
     }
 
+
     public void updateData(List<? extends TreeNode> list) {
         this.list = list;
         notifyDataSetChanged(); // сигнализируем адаптеру, что данные изменились, чтобы он обновился
@@ -75,12 +85,15 @@ public class TreeNodeAdapter extends RecyclerView.Adapter<TreeNodeAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView tvSprName;
+        public final TextView tvChildCount;
         public final ViewGroup layoutMain;
 
         public ViewHolder(View view) {
             super(view);
             tvSprName = (TextView) view.findViewById(R.id.spr_name);
-            layoutMain = (LinearLayout) view.findViewById(R.id.spr_main_layout);
+            layoutMain = (RelativeLayout) view.findViewById(R.id.spr_main_layout);
+            tvChildCount = (TextView) view.findViewById(R.id.spr_child_count);
+
         }
 
 //        @Override
