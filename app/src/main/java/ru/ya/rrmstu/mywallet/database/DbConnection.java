@@ -1,4 +1,4 @@
-package ru.ya.rrmstu.mywallet.app;
+package ru.ya.rrmstu.mywallet.database;
 
 import android.content.Context;
 import android.util.Log;

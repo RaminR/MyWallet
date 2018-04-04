@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import ru.ya.rrmstu.mywallet.R;
-import ru.ya.rrmstu.mywallet.app.DbConnection;
+import ru.ya.rrmstu.mywallet.database.DbConnection;
 
 public class SplashActivity extends AppCompatActivity {
 
