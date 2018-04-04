@@ -4,10 +4,20 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Настройки</string>
 
 
+    <string name="nav_header_subtitle">Расули Рамин</string>
+
     <string name="loading">Загрузка...</string>
+
+    <string name="operations">Операции</string>
+    <string name="sources">Категории</string>
+    <string name="storages">Счета</string>
+    <string name="reports">Отчеты</string>
+    <string name="settings">Найстройки</string>
+    <string name="help">Справка</string>
+    <string name="share">Поделиться</string>
+    <string name="rate_us">Оцените нас</string>
 </resources>
