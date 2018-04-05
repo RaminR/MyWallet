@@ -101,7 +101,7 @@ public class SourceDAOImpl implements SourceDAO {
     }
 
     @Override
-    public boolean delete(Source source) {
+    public boolean delete(Source source) throws SQLException {
         // TODO реализовать - если есть ли операции по данному хранилищу - запрещать удаление
         try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("delete from " + SOURCE_TABLE + " where id=?");) {
 
@@ -110,9 +110,6 @@ public class SourceDAOImpl implements SourceDAO {
             if (stmt.executeUpdate() == 1) {
                 return true;
             }
-
-        } catch (SQLException e) {
-            Logger.getLogger(SourceDAOImpl.class.getName()).log(Level.SEVERE, null, e);
         }
 
         return false;
@@ -125,9 +122,9 @@ public class SourceDAOImpl implements SourceDAO {
 
             stmt.setString(1, source.getName());
 
-            if (source.hasParent()){
+            if (source.hasParent()) {
                 stmt.setLong(2, source.getParent().getId());
-            }else{
+            } else {
                 stmt.setNull(2, Types.BIGINT);
             }
 

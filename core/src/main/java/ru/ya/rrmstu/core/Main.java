@@ -1,6 +1,7 @@
 package ru.ya.rrmstu.core;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Currency;
 
@@ -32,7 +33,7 @@ public class Main {
         sourceSync.getAll();
     }
 
-    private static void testOutcome() throws CurrencyException {
+    private static void testOutcome() throws CurrencyException, SQLException {
         OutcomeOperation operation = new OutcomeOperation();
         operation.setFromCurrency(storageSync.get(9).getCurrency("RUB"));
         operation.setFromAmount(new BigDecimal(900));
@@ -44,7 +45,7 @@ public class Main {
         operationSync.add(operation);
     }
 
-    private static void testIncome() throws CurrencyException {
+    private static void testIncome() throws CurrencyException, SQLException {
         IncomeOperation operation = new IncomeOperation();
         operation.setFromCurrency(storageSync.get(9).getCurrency("RUB"));
         operation.setFromAmount(new BigDecimal(10));
@@ -57,7 +58,7 @@ public class Main {
 
     }
 
-    private static void testTransfer() throws CurrencyException {
+    private static void testTransfer() throws CurrencyException, SQLException {
         TransferOperation operation = new TransferOperation();
         operation.setFromCurrency(storageSync.get(9).getCurrency("RUB"));
         operation.setFromAmount(new BigDecimal(3));
@@ -70,7 +71,7 @@ public class Main {
 
     }
 
-    private static void testConvert() throws CurrencyException {
+    private static void testConvert() throws CurrencyException, SQLException {
         Storage s1 = storageSync.get(9);
         Storage s2 = storageSync.get(10);
 
@@ -93,7 +94,7 @@ public class Main {
 
     }
 
-    private static void testStorage() {
+    private static void testStorage() throws SQLException {
         Storage parentStorage = storageSync.get(10);
 
 
@@ -122,7 +123,7 @@ public class Main {
         }
     }
 
-    private static DefaultSource testSource() {
+    private static DefaultSource testSource() throws SQLException {
         Source parentSource = sourceSync.get(4);
 
         DefaultSource s = new DefaultSource("test source 2");

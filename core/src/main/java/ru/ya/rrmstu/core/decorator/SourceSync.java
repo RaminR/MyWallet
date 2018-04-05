@@ -1,5 +1,6 @@
 package ru.ya.rrmstu.core.decorator;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -45,9 +46,55 @@ public class SourceSync implements SourceDAO {
 
     private void fillSourceMap(List<Source> list) {
 
+
+        // TODO когда начнется поддержка Java 8 для Android - использовать этот код
+//        for (OperationType type : OperationType.values()) {
+//            // используем lambda выражение для фильтрации
+//            sourceMap.put(type, list.stream().filter(s -> s.getOperationType() == type).collect(Collectors.toList()));
+//        }
+
+
+
         for (OperationType type : OperationType.values()) {
-            sourceMap.put(type, list.stream().filter(s -> s.getOperationType() == type).collect(Collectors.toList()));
+            ArrayList<Source> incomeSources = new ArrayList<>();
+            ArrayList<Source> outcomeSources = new ArrayList<>();
+            ArrayList<Source> transferSources = new ArrayList<>();
+            ArrayList<Source> convertSources = new ArrayList<>();
+
+            // проход по коллекции только один раз
+            for (Source o : list) {
+                switch (o.getOperationType()){
+                    case INCOME:{
+                        incomeSources.add(o);
+                        break;
+                    }
+
+                    case OUTCOME:{
+                        outcomeSources.add(o);
+                        break;
+                    }
+
+                    case TRANSFER:{
+                        transferSources.add(o);
+                        break;
+                    }
+
+                    case CONVERT:{
+                        convertSources.add(o);
+                        break;
+                    }
+                }
+            }
+
+            sourceMap.put(OperationType.INCOME, incomeSources);
+            sourceMap.put(OperationType.OUTCOME, outcomeSources);
+            sourceMap.put(OperationType.CONVERT, convertSources);
+            sourceMap.put(OperationType.TRANSFER, transferSources);
+
         }
+
+
+
 
     }
 
@@ -63,7 +110,7 @@ public class SourceSync implements SourceDAO {
 
 
     @Override
-    public boolean update(Source source) {
+    public boolean update(Source source) throws SQLException {
         if (sourceDAO.update(source)) {
             return true;
         }
@@ -71,7 +118,7 @@ public class SourceSync implements SourceDAO {
     }
 
     @Override
-    public boolean delete(Source source) {
+    public boolean delete(Source source) throws SQLException{
         // TODO добавить нужные Exceptions
         if (sourceDAO.delete(source)) {
             removeFromCollections(source);
@@ -106,7 +153,7 @@ public class SourceSync implements SourceDAO {
     }
 
     @Override
-    public boolean add(Source source) {
+    public boolean add(Source source) throws SQLException{
         if (sourceDAO.add(source)) {// если в БД добавился нормально
             addToCollections(source);
             return true;

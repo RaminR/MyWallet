@@ -1,6 +1,7 @@
 package ru.ya.rrmstu.core.decorator;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -85,7 +86,7 @@ public class OperationSync implements OperationDAO {
 //    При обновлении операции:
 //    - Откат предыдущих значений операции (удаление старой операции)
 //    - Добавление новой информации (добавление обновленной операции)
-    public boolean update(Operation operation) {// сюда объект попадает уже с обновленными значениями - а нам нужны еще и старые значения, чтобы их откатить
+    public boolean update(Operation operation) throws SQLException {// сюда объект попадает уже с обновленными значениями - а нам нужны еще и старые значения, чтобы их откатить
         if (delete(operationDAO.get(operation.getId())) // старые значени берем из БД
                 && add(operation)) {// добавляем новые значения
             return true;
@@ -94,7 +95,7 @@ public class OperationSync implements OperationDAO {
     }
 
     @Override
-    public boolean delete(Operation operation) {
+    public boolean delete(Operation operation) throws SQLException {
         // TODO добавить нужные Exceptions
         if (operationDAO.delete(operation) && revertBalance(operation)) {// если в БД удалилось нормально
             removeFromCollections(operation);
@@ -103,7 +104,7 @@ public class OperationSync implements OperationDAO {
         return false;
     }
 
-    private boolean revertBalance(Operation operation) {
+    private boolean revertBalance(Operation operation) throws SQLException {
         boolean updateAmountResult = false;
 
         try {
@@ -196,7 +197,7 @@ public class OperationSync implements OperationDAO {
 
     @Override
     // При добавлении операции – нужно сначала добавить запись в БД, затем добавить новую операцию во все коллекции и обновить баланс соотв. хранилища
-    public boolean add(Operation operation) {
+    public boolean add(Operation operation) throws SQLException {
         if (operationDAO.add(operation)) {// если в БД добавился нормально
             addToCollections(operation);// добавляем в коллекции
 
@@ -208,7 +209,7 @@ public class OperationSync implements OperationDAO {
         return false;
     }
 
-    private boolean updateBalance(Operation operation) {
+    private boolean updateBalance(Operation operation) throws SQLException {
         boolean updateAmountResult = false;
 
         try {

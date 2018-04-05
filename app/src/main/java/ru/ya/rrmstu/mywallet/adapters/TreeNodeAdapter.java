@@ -196,7 +196,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
 
     // удаляет записи и обновляет список
-    private void deleteNode(Source node, int position, Context context) {
+    private void deleteNode(Source node, int position, Context context) throws SQLException {
         try {
             Initializer.getSourceSync().delete(node);
             notifyDataSetChanged();// обновляем список
@@ -209,6 +209,8 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                 Toast.makeText(context, R.string.has_operations, Toast.LENGTH_SHORT).show();
             }
 
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
         }
     }
 }
