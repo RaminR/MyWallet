@@ -33,8 +33,8 @@ public class SprListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SprListFragment() {
-    }// фрагмент рекомендуется создавать пустым конструктором
+    public SprListFragment() {}// фрагмент рекомендуется создавать пустым конструктором
+
 
 
     // TODO: Customize parameter initialization

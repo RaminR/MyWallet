@@ -150,6 +150,4 @@ public class DefaultStorage extends AbstractTreeNode implements Storage {
         throw new CurrencyException("Currency (code=" + code + ") not exist in storage");
 
     }
-
-
 }

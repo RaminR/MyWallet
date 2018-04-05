@@ -9,10 +9,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import ru.ya.rrmstu.core.database.Initializer;
+import ru.ya.rrmstu.mywallet.utils.AppContext;
 
 public class DbConnection {
 
-    private static final String TAG = Context.class.getName();
+    private static final String TAG = AppContext.class.getName();
 
     private static final String DB_NAME = "wallet.db";
     private static final String DRIVER_CLASS = "org.sqldroid.SQLDroidDriver";

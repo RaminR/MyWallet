@@ -11,7 +11,9 @@ public class SQLiteConnection {
     private static Connection con;
     private static String urlConnection;
     private static String driverClassName;
-    
+
+    //TODO реализовать передачу датасорса, если ядро например будет использоваться для веб приложения
+
     public static void init(String driverName, String url) {
         urlConnection = url;
         driverClassName = driverName;
@@ -20,6 +22,16 @@ public class SQLiteConnection {
 
     private static void createConnection() {
         try {
+
+//            if (urlConnection==null){
+//                urlConnection = "jdbc:sqlite:c:\\data\\wallet.db";
+//
+//            }
+//
+//            if (driverClassName==null){
+//                driverClassName = "org.sqlite.JDBC";
+//
+//            }
 
             Class.forName(driverClassName).newInstance();
 

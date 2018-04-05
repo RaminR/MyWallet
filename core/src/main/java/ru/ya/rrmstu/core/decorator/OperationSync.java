@@ -23,6 +23,7 @@ import ru.ya.rrmstu.core.interfaces.Operation;
 
 public class OperationSync implements OperationDAO {
 
+
     private OperationDAO operationDAO;
 
     // Все коллекции хранят ссылки на одни и те же объекты, но в разных "срезах"
@@ -63,11 +64,51 @@ public class OperationSync implements OperationDAO {
     private void fillOperationMap() {
         // в operationMap и operationList находятся одни и те же объекты!!
 
+        // TODO когда начнется поддержка Java 8 для Android - использовать этот код
+//        for (OperationType type : OperationType.values()) {
+//            // используем lambda выражение для фильтрации
+//            operationMap.put(type, operationList.stream().filter(o -> o.getOperationType() == type).collect(Collectors.toList()));
+//        }
+
 
         for (OperationType type : OperationType.values()) {
-            // используем lambda выражение для фильтрации
-            operationMap.put(type, operationList.stream().filter(o -> o.getOperationType() == type).collect(Collectors.toList()));
+            ArrayList<Operation> incomeOperations = new ArrayList<>();
+            ArrayList<Operation> outcomeOperations = new ArrayList<>();
+            ArrayList<Operation> transferOperations = new ArrayList<>();
+            ArrayList<Operation> convertOperations = new ArrayList<>();
+
+            // проход по коллекции только один раз
+            for (Operation o : operationList) {
+                switch (o.getOperationType()){
+                    case INCOME:{
+                        incomeOperations.add(o);
+                        break;
+                    }
+
+                    case OUTCOME:{
+                        outcomeOperations.add(o);
+                        break;
+                    }
+
+                    case TRANSFER:{
+                        transferOperations.add(o);
+                        break;
+                    }
+
+                    case CONVERT:{
+                        convertOperations.add(o);
+                        break;
+                    }
+                }
+            }
+
+            operationMap.put(OperationType.INCOME, incomeOperations);
+            operationMap.put(OperationType.OUTCOME, outcomeOperations);
+            operationMap.put(OperationType.CONVERT, convertOperations);
+            operationMap.put(OperationType.TRANSFER, transferOperations);
+
         }
+
     }
 
 
@@ -86,7 +127,7 @@ public class OperationSync implements OperationDAO {
 //    При обновлении операции:
 //    - Откат предыдущих значений операции (удаление старой операции)
 //    - Добавление новой информации (добавление обновленной операции)
-    public boolean update(Operation operation) throws SQLException {// сюда объект попадает уже с обновленными значениями - а нам нужны еще и старые значения, чтобы их откатить
+    public boolean update(Operation operation) throws SQLException{// сюда объект попадает уже с обновленными значениями - а нам нужны еще и старые значения, чтобы их откатить
         if (delete(operationDAO.get(operation.getId())) // старые значени берем из БД
                 && add(operation)) {// добавляем новые значения
             return true;
@@ -95,7 +136,7 @@ public class OperationSync implements OperationDAO {
     }
 
     @Override
-    public boolean delete(Operation operation) throws SQLException {
+    public boolean delete(Operation operation) throws SQLException{
         // TODO добавить нужные Exceptions
         if (operationDAO.delete(operation) && revertBalance(operation)) {// если в БД удалилось нормально
             removeFromCollections(operation);
@@ -104,7 +145,7 @@ public class OperationSync implements OperationDAO {
         return false;
     }
 
-    private boolean revertBalance(Operation operation) throws SQLException {
+    private boolean revertBalance(Operation operation) throws SQLException{
         boolean updateAmountResult = false;
 
         try {
@@ -197,7 +238,7 @@ public class OperationSync implements OperationDAO {
 
     @Override
     // При добавлении операции – нужно сначала добавить запись в БД, затем добавить новую операцию во все коллекции и обновить баланс соотв. хранилища
-    public boolean add(Operation operation) throws SQLException {
+    public boolean add(Operation operation) throws SQLException{
         if (operationDAO.add(operation)) {// если в БД добавился нормально
             addToCollections(operation);// добавляем в коллекции
 
@@ -209,7 +250,7 @@ public class OperationSync implements OperationDAO {
         return false;
     }
 
-    private boolean updateBalance(Operation operation) throws SQLException {
+    private boolean updateBalance(Operation operation) throws SQLException{
         boolean updateAmountResult = false;
 
         try {

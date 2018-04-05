@@ -67,14 +67,11 @@ public class SourceDAOImpl implements SourceDAO {
                     source.setParentId(rs.getLong("parent_id"));
                     source.setOperationType(OperationType.getType(rs.getInt("operation_type_id")));
                 }
-
                 return source;
             }
-
         } catch (SQLException e) {
             Logger.getLogger(SourceDAOImpl.class.getName()).log(Level.SEVERE, null, e);
         }
-
         return null;
     }
 
@@ -111,6 +108,7 @@ public class SourceDAOImpl implements SourceDAO {
                 return true;
             }
         }
+
 
         return false;
     }

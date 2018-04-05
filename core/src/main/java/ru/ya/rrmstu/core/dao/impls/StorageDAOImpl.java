@@ -34,7 +34,7 @@ public class StorageDAOImpl implements StorageDAO {
 
 
             try (Statement stmt = SQLiteConnection.getConnection().createStatement();
-                    ResultSet rs = stmt.executeQuery("select * from " + STORAGE_TABLE + " order by parent_id");) {
+                 ResultSet rs = stmt.executeQuery("select * from " + STORAGE_TABLE + " order by parent_id");) {
 
                 while (rs.next()) {
                     DefaultStorage storage = new DefaultStorage();
@@ -42,43 +42,33 @@ public class StorageDAOImpl implements StorageDAO {
                     storage.setName(rs.getString("name"));
                     storage.setParentId(rs.getLong("parent_id"));
 
-
                     storageList.add(storage);
                 }
-
-
             }
 
-
             // для каждого хранилища загрузить доступны валюты и баланс
-
             for (Storage storage : storageList) {
 
                 try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("select * from " + CURRENCY_AMOUNT_TABLE + " where storage_id =?");) {
 
                     stmt.setLong(1, storage.getId());
 
-                    try(ResultSet rs = stmt.executeQuery();){
+                    try (ResultSet rs = stmt.executeQuery();) {
                         while (rs.next()) {
                             storage.addCurrency(Currency.getInstance(rs.getString("currency_code")), rs.getBigDecimal("amount"));
                         }
                     }
-
                 }
-
             }
 
             return storageList;
-
-
 
         } catch (SQLException e) {
             Logger.getLogger(StorageDAOImpl.class.getName()).log(Level.SEVERE, null, e);
         } catch (CurrencyException e) {
             e.printStackTrace();
         }
-
-
+        
         return null;
     }
 
@@ -284,6 +274,5 @@ public class StorageDAOImpl implements StorageDAO {
 
         return false;
     }
-
-
 }
+

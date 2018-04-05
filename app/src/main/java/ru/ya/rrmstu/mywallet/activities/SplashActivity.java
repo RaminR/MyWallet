@@ -12,28 +12,32 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash);
 
+
         new Thread() {
-            @Override
             public void run() {
+                // загрузка начальных данных (операции, справочники)
                 DbConnection.initConnection(getApplicationContext());
 
+                // имитация загрузки
                 imitateLoading();
 
+                // после загрузки переходим на главное окно
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         }.start();
+
+
     }
 
     private void imitateLoading() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-
 }

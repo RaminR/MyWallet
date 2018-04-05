@@ -16,10 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.ya.rrmstu.core.database.Initializer;
-import ru.ya.rrmstu.core.enums.OperationType;
-import ru.ya.rrmstu.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.R;
+import ru.ya.rrmstu.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener {
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
 
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -171,6 +172,4 @@ public class MainActivity extends AppCompatActivity
             backIcon.setVisibility(View.VISIBLE);
         }
     }
-
-
 }

@@ -21,9 +21,11 @@
     <string name="share">Share</string>
     <string name="rate_us">Rate us</string>
 
-    <string name="add_sub">Add</string>
-    <string name="edit_sub">Edit</string>
-    <string name="delete_sub">Delete</string>
+    <!--popup меню для справочников-->
+    <string name="add_sub">+ Sub category</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
 
     <string name="confirm">Confirm</string>
     <string name="confirm_delete">Delete record?</string>

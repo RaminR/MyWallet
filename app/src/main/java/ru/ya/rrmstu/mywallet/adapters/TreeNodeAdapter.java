@@ -2,7 +2,7 @@ package ru.ya.rrmstu.mywallet.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.SQLException;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.core.database.Initializer;
 import ru.ya.rrmstu.core.interfaces.Source;
 import ru.ya.rrmstu.core.interfaces.TreeNode;
-import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment.OnListFragmentInteractionListener;
 
@@ -196,7 +197,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
 
     // удаляет записи и обновляет список
-    private void deleteNode(Source node, int position, Context context) throws SQLException {
+    private void deleteNode(Source node, int position, Context context) {
         try {
             Initializer.getSourceSync().delete(node);
             notifyDataSetChanged();// обновляем список
@@ -209,8 +210,6 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                 Toast.makeText(context, R.string.has_operations, Toast.LENGTH_SHORT).show();
             }
 
-        } catch (java.sql.SQLException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -7,10 +7,10 @@
 
     <item
         android:id="@+id/item_edit"
-        android:title="@string/edit_sub" />
+        android:title="@string/edit" />
 
     <item
         android:id="@+id/item_delete"
-        android:title="@string/delete_sub" />
+        android:title="@string/delete" />
 
 </menu>

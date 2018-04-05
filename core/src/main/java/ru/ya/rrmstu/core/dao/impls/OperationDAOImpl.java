@@ -169,12 +169,12 @@ public class OperationDAOImpl implements OperationDAO {
 
     @Override
     // при обновлении не даем менять тип операции - только данные самой операции (дата, суммы, источники, хранилища, описание)
-    public boolean update(Operation operation) {
+    public boolean update(Operation operation) throws SQLException{
         return (delete(operation) && add(operation));// при обновлении - удаляем старую операцию, добавляем новую, т.к. могут поменяться хранилища, источники
     }
 
     @Override
-    public boolean delete(Operation operation) {
+    public boolean delete(Operation operation) throws SQLException{
         // TODO реализовать - если есть ли операции по данному хранилищу - запрещать удаление
         try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement("delete from " + OPERATION_TABLE + " where id=?");) {
 
@@ -183,20 +183,14 @@ public class OperationDAOImpl implements OperationDAO {
             if (stmt.executeUpdate() == 1) {
                 return true;
             }
-
-        } catch (SQLException e) {
-            Logger.getLogger(SourceDAOImpl.class.getName()).log(Level.SEVERE, null, e);
         }
-
         return false;
     }
 
     @Override
     public boolean add(Operation operation) {
 
-
         String sql = createInsertSql(operation); // подготовить sql с нужными параметрами, в зависимости от типа операции
-
 
         try (PreparedStatement stmt = SQLiteConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 
@@ -246,8 +240,6 @@ public class OperationDAOImpl implements OperationDAO {
                     stmt.setBigDecimal(9, convertOperation.getToAmount());
                     break;
             }
-
-
 
             if (stmt.executeUpdate() == 1) {// если объект добавился нормально
                 try (ResultSet rs = stmt.getGeneratedKeys()) {// получаем id вставленной записи

@@ -56,7 +56,7 @@ public class StorageSync implements StorageDAO {
 
     @Override
     // TODO подумать как сделать - сначала обновлять в базе, а потом уже в коллекции (либо - если в базе не обновилось - откатить изменения в объекте коллекции)
-    public boolean update(Storage storage) throws SQLException{
+    public boolean update(Storage storage) throws SQLException {
         if (storageDAO.update(storage)) {
             return true;
         }
@@ -64,7 +64,7 @@ public class StorageSync implements StorageDAO {
     }
 
     @Override
-    public boolean delete(Storage storage) throws SQLException{
+    public boolean delete(Storage storage) throws SQLException {
         // TODO добавить нужные Exceptions
         if (storageDAO.delete(storage)) {
             removeFromCollections(storage);
@@ -100,7 +100,7 @@ public class StorageSync implements StorageDAO {
     }
 
     @Override
-    public boolean add(Storage storage) throws SQLException{
+    public boolean add(Storage storage) throws SQLException {
 
         if (storageDAO.add(storage)) {// если в БД добавилось нормально
             addToCollections(storage);

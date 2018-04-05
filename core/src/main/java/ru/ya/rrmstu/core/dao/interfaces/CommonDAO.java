@@ -10,10 +10,9 @@ public interface CommonDAO<T> {
 
     T get(long id);
 
-    boolean update(T object) throws SQLException;// boolean - чтобы удостовериться, что операция прошла успешно
+    boolean update(T object) throws SQLException; // boolean - чтобы удостовериться, что операция прошла успешно
 
     boolean delete(T object) throws SQLException;
 
     boolean add(T object) throws SQLException;
-
 }

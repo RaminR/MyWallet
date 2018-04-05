@@ -75,8 +75,8 @@ public abstract class AbstractTreeNode implements TreeNode {
     @Override
     public TreeNode getChild(long id) {
 
-        for (TreeNode child: childs) {
-            if (child.getId() == id){
+        for (TreeNode child : childs) {
+            if (child.getId() == id) {
                 return child;
             }
         }
@@ -86,13 +86,13 @@ public abstract class AbstractTreeNode implements TreeNode {
 
 
     @Override
-    public boolean hasChilds(){
+    public boolean hasChilds() {
         return !childs.isEmpty();// если есть дочерние элементы - вернуть true
     }
 
     @Override
     public boolean hasParent() {
-        return parent!=null;// если есть родитель - вернет true
+        return parent != null;// если есть родитель - вернет true
     }
 
     @Override
