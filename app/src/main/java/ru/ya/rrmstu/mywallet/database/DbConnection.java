@@ -42,6 +42,12 @@ public class DbConnection {
 
         dbPath = dbFolder + DB_NAME;
 
+
+        // TODO УДАЛИТЬ ПЕРЕД РЕАЛИЗОМ А ТО ПОЛЬЗОВАТЕЛИ НЕ ОЦЕНЯТ ДАННУЮ ФИЧУ
+        if (checkDataBaseExists()) {
+            new File(dbPath).delete();
+        }
+
         if (!checkDataBaseExists()) {
             copyDataBase(context);
         }

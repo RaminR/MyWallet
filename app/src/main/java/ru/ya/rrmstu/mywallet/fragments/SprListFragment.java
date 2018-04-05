@@ -3,7 +3,6 @@ package ru.ya.rrmstu.mywallet.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +12,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import ru.ya.rrmstu.core.database.Initializer;
+import ru.ya.rrmstu.core.interfaces.Source;
 import ru.ya.rrmstu.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.mywallet.adapters.TreeNodeAdapter;
-import ru.ya.rrmstu.mywallet.fragments.dummy.DummyContent;
-import ru.ya.rrmstu.mywallet.fragments.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -27,42 +25,31 @@ import ru.ya.rrmstu.mywallet.fragments.dummy.DummyContent.DummyItem;
  */
 public class SprListFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-    private OnListFragmentInteractionListener clickListener;
+    private OnListFragmentInteractionListener clickListener;// в нашем случае - активити является слушателем события нажатия пункта меню
 
-    private List<? extends TreeNode> list;
-
-    private TreeNodeAdapter treeNodeAdapter;
+    private TreeNodeAdapter treeNodeAdapter; // адаптер для RecyclerView
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public SprListFragment() {
-    }
+    }// фрагмент рекомендуется создавать пустым конструктором
+
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static SprListFragment newInstance(int columnCount) {
-
-
-        SprListFragment fragment = new SprListFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static SprListFragment newInstance(int columnCount) {
+//        SprListFragment fragment = new SprListFragment();
+//        Bundle args = new Bundle();
+//        args.putInt(ARG_COLUMN_COUNT, columnCount);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -74,11 +61,7 @@ public class SprListFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));// выбираем стандартный тип показа - как список
             recyclerView.setAdapter(treeNodeAdapter);
         }
         return view;
@@ -92,6 +75,9 @@ public class SprListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        // если активити, где используется фрагмент, не реализовывает интерфейс - уведомляем исключением
+        // таким образом - разработчик принуждается к тому, чтобы активити, где размещен фрагмент, реализовывал этот интерфейс
         if (context instanceof OnListFragmentInteractionListener) {
             clickListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -99,15 +85,14 @@ public class SprListFragment extends Fragment {
                     + " must implement OnListFragmentInteractionListener");
         }
 
-        list = Initializer.getSourceSync().getAll();
-        treeNodeAdapter = new TreeNodeAdapter(list, clickListener);
+        treeNodeAdapter = new TreeNodeAdapter<Source>(Initializer.getSourceSync().getAll(), clickListener, getContext()); // при первой загрузке - показать все записи
 
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        clickListener = null;
+        clickListener = null;// при смене или удалении фрагмента из активити - зануляем слушатель
     }
 
     /**
@@ -120,9 +105,7 @@ public class SprListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
+    public interface OnListFragmentInteractionListener { // интерфейс для слушателя события при нажатии записи списка
         void onListFragmentInteraction(TreeNode selectedNode);
     }
 }
-

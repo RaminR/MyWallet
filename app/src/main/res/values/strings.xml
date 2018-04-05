@@ -21,5 +21,15 @@
     <string name="share">Share</string>
     <string name="rate_us">Rate us</string>
 
+    <string name="add_sub">Add</string>
+    <string name="edit_sub">Edit</string>
+    <string name="delete_sub">Delete</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="confirm_delete">Delete record?</string>
+    <string name="has_operations">Can\'t delete record with operations</string>
+    <string name="deleted">Cancel delete?</string>
+    <string name="undo">UNDO</string>
+
 
 </resources>

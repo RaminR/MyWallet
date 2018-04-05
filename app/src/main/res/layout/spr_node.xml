@@ -5,35 +5,39 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
-    <LinearLayout
-        android:id="@+id/layout_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true">
 
-        <ImageView
-            android:id="@+id/image_spr_value"
-            android:layout_width="45dp"
-            android:layout_height="45dp" />
+    <ImageView
+        android:id="@+id/image_spr_value"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@android:drawable/btn_star" />
 
-    </LinearLayout>
 
     <TextView
         android:id="@+id/spr_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/layout_image"
+        android:layout_toRightOf="@+id/image_spr_value"
         android:text="value"
         android:textSize="17sp" />
 
-    <TextView
-        android:id="@+id/spr_child_count"
+    <ImageView
+        android:id="@+id/spr_popup_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
+        android:src="@android:drawable/ic_dialog_info" />
+
+    <TextView
+        android:id="@+id/spr_child_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/spr_popup_button"
         android:text="value" />
 
 </RelativeLayout>
