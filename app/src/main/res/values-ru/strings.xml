@@ -49,4 +49,9 @@
     <string name="transfer">Перевод</string>
     <string name="convert">Конветрация</string>
 
+    <string name="editing">Редактирование</string>
+    <string name="adding">Добавление</string>
+
+    <string name="icon">Иконка</string>
+
 </resources>

@@ -48,4 +48,9 @@
     <string name="transfer">Transfer</string>
     <string name="convert">Convert</string>
 
+    <string name="editing">Edit</string>
+    <string name="adding">Add</string>
+
+    <string name="icon">Icon</string>
+
 </resources>
