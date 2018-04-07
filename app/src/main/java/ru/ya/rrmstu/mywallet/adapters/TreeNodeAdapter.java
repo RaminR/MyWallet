@@ -32,12 +32,6 @@ import ru.ya.rrmstu.mywallet.fragments.SprListFragment.OnListFragmentInteraction
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-
-/**
- * {@link RecyclerView.Adapter} that can display a {@link TreeNode} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<TreeNodeAdapter.ViewHolder> {
 
     private static final String TAG = TreeNodeAdapter.class.getName();
@@ -45,6 +39,8 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
     private List<T> list;
     private final SprListFragment.OnListFragmentInteractionListener clickListener;// хранит слушателя события нажатия пункта
     private Context context;
+
+    private Snackbar snackbar; // для возможности отменить удаление
 
 
     public TreeNodeAdapter(List<T> list, SprListFragment.OnListFragmentInteractionListener clickListener, Context context) {
@@ -166,8 +162,43 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            deleteNode((Source) node, position, context); // удаляем из-базы и коллекции, обновляем список
+
+                                            // удаляем запись из коллекции (пока без удалении из базы)
+                                            list.remove(node);
+                                            notifyItemRemoved(position);
+
+
+                                            // при удалении - сначала даем пользователю отменить действие с помощью SnackBar
+                                            snackbar = Snackbar.make(btnPopup, R.string.deleted, Snackbar.LENGTH_LONG);
+
+                                            snackbar.setAction(R.string.undo, new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {// если нажали на отмену удаления
+
+                                                    if (node.hasParent()) { // если это был дочерний элемент
+                                                        node.getParent().getChilds().add(position, node);// возвращаем обратно дочерний элемент
+                                                    } else { // это был корневой элемент
+                                                        list.add(position, node);// возвращаем
+                                                    }
+
+                                                    notifyDataSetChanged();
+
+                                                }
+                                            }).setCallback(new Snackbar.Callback() {// для того, чтобы могли отловить момент, когда SnackBar исчезнет (т.е. ползователь не успел отменить удаление)
+
+                                                @Override
+                                                public void onDismissed(Snackbar snackbar, int event) {
+
+                                                    if (event != DISMISS_EVENT_ACTION) {// если не была нажата ссылка отмены
+                                                        deleteNode((Source) node, position, context); // удаляем из-базы и коллекции, обновляем список
+                                                    }
+
+                                                }
+                                            }).show();
+
+
                                         }
+
 
                                     })
 
