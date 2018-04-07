@@ -12,11 +12,12 @@
 
     <string name="loading">Загрузка...</string>
 
+    <!-- боковое меню-->
     <string name="operations">Операции</string>
     <string name="sources">Категории</string>
     <string name="storages">Счета</string>
     <string name="reports">Отчеты</string>
-    <string name="settings">Найстройки</string>
+    <string name="settings">Настройки</string>
     <string name="help">Справка</string>
     <string name="share">Поделиться</string>
     <string name="rate_us">Оцените нас</string>
@@ -31,5 +32,21 @@
     <string name="has_operations">Нельзя удалить запись, которая используется в операции</string>
     <string name="deleted">Запись удалена</string>
     <string name="undo">ОТМЕНИТЬ</string>
+
+
+    <string name="tab_all">Все</string>
+    <string name="tab_income">Доходы</string>
+    <string name="tab_outcome">Расходы</string>
+
+
+    <string name="name">Название</string>
+
+    <string name="enter_value">Введите значение</string>
+    <string name="type">Тип</string>
+
+    <string name="income">Доход</string>
+    <string name="outcome">Расход</string>
+    <string name="transfer">Перевод</string>
+    <string name="convert">Конветрация</string>
 
 </resources>

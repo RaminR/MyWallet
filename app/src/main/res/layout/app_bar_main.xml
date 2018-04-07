@@ -38,32 +38,40 @@
         </android.support.v7.widget.Toolbar>
 
 
+
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
-            app:tabMode="fixed">
+            app:tabMode="fixed"
 
+
+            >
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_all"
                 android:layout_height="20dp"
-                android:text="All" />
+                android:text="All"
+                />
 
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_income"
                 android:layout_height="20dp"
-                android:text="Income" />
+                android:text="Income"
+                />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_outcome"
                 android:layout_height="20dp"
-                android:text="Outcome" />
+                android:text="Outcome"
+                />
+
 
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
+
 
 
     <include layout="@layout/content_main" />

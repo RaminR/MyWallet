@@ -1,5 +1,6 @@
 package ru.ya.rrmstu.mywallet.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -18,18 +19,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ru.ya.rrmstu.core.database.Initializer;
-import ru.ya.rrmstu.core.enums.OperationType;
 import ru.ya.rrmstu.mywallet.R;
-import ru.ya.rrmstu.core.interfaces.TreeNode;
+import ru.ya.rrmstu.mywallet.core.database.Initializer;
+import ru.ya.rrmstu.mywallet.core.enums.OperationType;
+import ru.ya.rrmstu.mywallet.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener {
 
 
-    private ImageView backIcon;
+    private ImageView iconBack;
     private Toolbar toolbar;
     private TextView toolbarTitle;
 
@@ -48,17 +48,15 @@ public class MainActivity extends AppCompatActivity
 
         initToolbar();
 
-
         //initFloatingButton();
-
 
         initNavigationDrawer(toolbar);
 
-
         initFragment();
 
-
         initTabs();
+
+        list = Initializer.getSourceSync().getAll();
 
 
     }
@@ -70,6 +68,10 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
+                // при переключении табов - сбросить название и убрать стрелку возврата к родительским элементам
+                iconBack.setVisibility(View.INVISIBLE);
+                toolbarTitle.setText(R.string.sources);
 
                 switch (tab.getPosition()) {
                     case 0:// все
@@ -90,13 +92,12 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
+
         });
     }
 
@@ -114,15 +115,15 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        backIcon = (ImageView) findViewById(R.id.ic_back);
+        iconBack = (ImageView) findViewById(R.id.ic_back);
 
-        backIcon.setOnClickListener(new View.OnClickListener() {
+        iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (selectedNode.getParent() == null) {// показать корневые элементы
                     sprListFragment.updateData(list);
                     toolbarTitle.setText(R.string.sources);
-                    backIcon.setVisibility(View.INVISIBLE);
+                    iconBack.setVisibility(View.INVISIBLE);
                 } else {// показать родительские элементы
                     sprListFragment.updateData(selectedNode.getParent().getChilds());
                     selectedNode = selectedNode.getParent();
@@ -219,7 +220,19 @@ public class MainActivity extends AppCompatActivity
         this.selectedNode = selectedNode;
         if (selectedNode.hasChilds()) {
             toolbarTitle.setText(selectedNode.getName());// показывает выбранную категорию
-            backIcon.setVisibility(View.VISIBLE);
+            iconBack.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == EditSourceActivity.REQUEST_NODE_EDIT) {// кто был инициатором вызова
+            if (resultCode == RESULT_OK) { // какой результат вернулся
+                sprListFragment.updateRow((TreeNode) data.getSerializableExtra(EditSourceActivity.NODE_OBJECT));// отправляем на обновление измененный объект
+            }
         }
     }
 }

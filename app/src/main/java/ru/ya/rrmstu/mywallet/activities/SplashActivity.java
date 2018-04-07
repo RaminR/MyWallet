@@ -1,8 +1,8 @@
 package ru.ya.rrmstu.mywallet.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.mywallet.database.DbConnection;

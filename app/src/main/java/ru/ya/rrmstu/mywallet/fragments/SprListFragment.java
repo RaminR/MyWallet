@@ -1,5 +1,6 @@
 package ru.ya.rrmstu.mywallet.fragments;
 
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,11 +12,11 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import ru.ya.rrmstu.core.database.Initializer;
-import ru.ya.rrmstu.core.interfaces.Source;
-import ru.ya.rrmstu.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.mywallet.adapters.TreeNodeAdapter;
+import ru.ya.rrmstu.mywallet.core.database.Initializer;
+import ru.ya.rrmstu.mywallet.core.interfaces.Source;
+import ru.ya.rrmstu.mywallet.core.interfaces.TreeNode;
 
 /**
  * A fragment representing a list of Items.
@@ -33,8 +34,8 @@ public class SprListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SprListFragment() {}// фрагмент рекомендуется создавать пустым конструктором
-
+    public SprListFragment() {
+    }// фрагмент рекомендуется создавать пустым конструктором
 
 
     // TODO: Customize parameter initialization
@@ -93,6 +94,10 @@ public class SprListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         clickListener = null;// при смене или удалении фрагмента из активити - зануляем слушатель
+    }
+
+    public void updateRow(TreeNode node) {
+        treeNodeAdapter.updateNode(node);
     }
 
     /**

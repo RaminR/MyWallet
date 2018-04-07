@@ -1,7 +1,9 @@
 package ru.ya.rrmstu.mywallet.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -20,16 +22,17 @@ import java.sql.SQLException;
 import java.util.List;
 
 import ru.ya.rrmstu.mywallet.R;
-import ru.ya.rrmstu.core.database.Initializer;
-import ru.ya.rrmstu.core.interfaces.Source;
-import ru.ya.rrmstu.core.interfaces.TreeNode;
+import ru.ya.rrmstu.mywallet.activities.EditSourceActivity;
+import ru.ya.rrmstu.mywallet.core.database.Initializer;
+import ru.ya.rrmstu.mywallet.core.impls.DefaultSource;
+import ru.ya.rrmstu.mywallet.core.interfaces.Source;
+import ru.ya.rrmstu.mywallet.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
-import ru.ya.rrmstu.mywallet.fragments.SprListFragment.OnListFragmentInteractionListener;
 
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link TreeNode} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link ru.ya.rrmstu.mywallet.fragments.SprListFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<TreeNodeAdapter.ViewHolder> {
@@ -39,6 +42,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
     private List<T> list;
     private final SprListFragment.OnListFragmentInteractionListener clickListener;// хранит слушателя события нажатия пункта
     private Context context;
+    private int currentEditPosition;
 
     private Snackbar snackbar; // для возможности отменить удаление
 
@@ -61,7 +65,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
     public void onBindViewHolder(final TreeNodeAdapter.ViewHolder holder, final int position) {// вызывается для каждой записи списка
 
 
-        T node = list.get(position);// определяем выбранный пункт
+        final T node = list.get(position);// определяем выбранный пункт
         holder.tvSprName.setText(node.getName());
 
         // показать кол-во дочерних элементов, если они есть
@@ -90,6 +94,8 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
                 if (treeNode.hasChilds()) {// если есть дочерние значения
                     updateData((List<T>) treeNode.getChilds());// показать дочек
+                } else {
+                    runEditActivity(context, node, position);// если нет дочерних - открываем пункт для редактирования
                 }
 
             }
@@ -110,6 +116,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         notifyDataSetChanged(); // сигнализируем адаптеру, что данные изменились, чтобы он обновился
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView tvSprName;
@@ -121,10 +128,10 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
             super(view);
 
             // чтобы для каждого компонента не выполнять findViewById - сохраняем ссылки в константы
-            tvSprName = (TextView) view.findViewById(R.id.spr_name);
+            tvSprName = (TextView) view.findViewById(R.id.tv_node_name);
             layoutMain = (RelativeLayout) view.findViewById(R.id.spr_main_layout);
-            tvChildCount = (TextView) view.findViewById(R.id.spr_child_count);
-            btnPopup = (ImageView) view.findViewById(R.id.spr_popup_button);
+            tvChildCount = (TextView) view.findViewById(R.id.tv_node_child_count);
+            btnPopup = (ImageView) view.findViewById(R.id.img_node_popup);
 
         }
 
@@ -150,6 +157,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                         if (id == R.id.item_add) {
 
                         } else if (id == R.id.item_edit) {
+                            runEditActivity(context, node, position);
 
                         } else if (id == R.id.item_delete) {// если нажали пункт удаления
 
@@ -190,7 +198,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                                                 public void onDismissed(Snackbar snackbar, int event) {
 
                                                     if (event != DISMISS_EVENT_ACTION) {// если не была нажата ссылка отмены
-                                                        deleteNode((Source) node, position, context); // удаляем из-базы и коллекции, обновляем список
+                                                        deleteNode((Source) node, context); // удаляем из-базы и коллекции, обновляем список
                                                     }
 
                                                 }
@@ -226,9 +234,19 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     }
 
+    // вызвать активити для редактирования справочного значения и вернуть результат в основной активити
+    private void runEditActivity(Context context, T node, int position) {
+
+        Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
+        intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
+        ((Activity) context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_EDIT); // REQUEST_NODE_EDIT - индикатор, кто является инициатором
+
+        currentEditPosition = position;
+    }
+
 
     // удаляет записи и обновляет список
-    private void deleteNode(Source node, int position, Context context) {
+    private void deleteNode(Source node, Context context) {
         try {
             Initializer.getSourceSync().delete(node);
             notifyDataSetChanged();// обновляем список
@@ -242,5 +260,15 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
             }
 
         }
+    }
+
+    public void updateNode(T node) {
+        try {
+            Initializer.getSourceSync().update((Source) node);
+            notifyItemChanged(currentEditPosition);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
     }
 }

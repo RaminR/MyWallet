@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import ru.ya.rrmstu.core.database.Initializer;
+import ru.ya.rrmstu.mywallet.core.database.Initializer;
 import ru.ya.rrmstu.mywallet.utils.AppContext;
 
 public class DbConnection {
