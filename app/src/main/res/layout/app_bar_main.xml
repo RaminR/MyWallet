@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="ru.ya.rrmstu.mywallet.activities.MainActivity">
 
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,7 +23,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:baselineAligned="false">
 
                 <ImageView
@@ -32,8 +32,8 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="left"
-                    android:paddingLeft="10dp"
-                    android:src="@android:drawable/ic_menu_revert"
+                    android:src="@drawable/ic_arrow_back"
+                    android:tint="@color/colorPrimaryText"
 
                     android:visibility="invisible" />
 
@@ -55,7 +55,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingRight="10dp"
-                    android:src="@android:drawable/ic_menu_add" />
+                    android:src="@drawable/ic_add"
+                    android:tint="@color/colorPrimaryText" />
 
             </RelativeLayout>
 
@@ -90,7 +91,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:text="Outcome" />
-
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>

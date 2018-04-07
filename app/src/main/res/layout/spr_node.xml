@@ -3,19 +3,21 @@
     android:id="@+id/spr_main_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/img_node_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
         android:src="@android:drawable/btn_star" />
 
     <TextView
         android:id="@+id/tv_node_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/img_node_icon"
         android:text="value"
@@ -29,16 +31,20 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:src="@android:drawable/ic_menu_info_details" />
+        android:src="@drawable/ic_more"
+        android:tint="@color/colorPrimaryText" />
 
     <TextView
         android:id="@+id/tv_node_child_count"
-        android:layout_width="wrap_content"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="15dp"
         android:layout_toLeftOf="@id/img_node_popup"
-        android:text="value" />
+        android:background="@color/colorSecondaryText"
+        android:text="10"
+        android:textAlignment="center"
+        android:textColor="@android:color/white" />
 
 
 </RelativeLayout>

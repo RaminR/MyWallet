@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -69,10 +70,12 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         holder.tvSprName.setText(node.getName());
 
         // показать кол-во дочерних элементов, если они есть
-        if (node.getChilds() != null && !node.getChilds().isEmpty()) {
+        if (node.hasChilds()) {
             holder.tvChildCount.setText(String.valueOf(node.getChilds().size()));
+            holder.tvChildCount.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
         } else {
             holder.tvChildCount.setText("");
+            holder.tvChildCount.setBackground(null);// чтобы не рисовал пустую закрашенную область
         }
 
         // для каждого пункта формируем слушатель
@@ -298,7 +301,6 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         }
     }
 
-
     public void updateNode(T node) {
         try {
             Initializer.getSourceSync().update((Source) node);
@@ -306,6 +308,5 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }
-
     }
 }

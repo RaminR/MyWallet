@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
 import java.util.List;
 
 import ru.ya.rrmstu.mywallet.R;
@@ -63,6 +65,12 @@ public class SprListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));// выбираем стандартный тип показа - как список
+
+            // добавить разделитель между элементами списка
+            recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
+                    .marginResId(R.dimen.divider_left_margin, R.dimen.divider_right_margin)
+                    .build());
+
             recyclerView.setAdapter(treeNodeAdapter);
         }
         return view;
@@ -124,3 +132,4 @@ public class SprListFragment extends Fragment {
         void onPopupShow(TreeNode selectedNode);
     }
 }
+

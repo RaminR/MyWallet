@@ -40,5 +40,6 @@ dependencies {
     implementation project(':core')
     implementation 'org.sqldroid:sqldroid:+'
     implementation 'com.jpardogo.googleprogressbar:library:+'
+    implementation 'com.yqritc:recyclerview-flexibledivider:+'
 
 }
