@@ -23,6 +23,8 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
     public final static String NODE_OBJECT = "ru.ya.rrmstu.mywallet.activities.EditSourceActivity.NodeObject";
     public final static int REQUEST_NODE_EDIT = 101;
     public final static int REQUEST_NODE_ADD = 102;
+    public final static int REQUEST_NODE_ADD_CHILD = 103;
+
 
     private Toolbar toolbar;
     private TextView etName;

@@ -30,6 +30,7 @@ import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
 import static ru.ya.rrmstu.mywallet.activities.EditSourceActivity.NODE_OBJECT;
 import static ru.ya.rrmstu.mywallet.activities.EditSourceActivity.REQUEST_NODE_ADD;
 import static ru.ya.rrmstu.mywallet.activities.EditSourceActivity.REQUEST_NODE_EDIT;
+import static ru.ya.rrmstu.mywallet.activities.EditSourceActivity.REQUEST_NODE_ADD_CHILD;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener {
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity
                 iconBack.setVisibility(View.INVISIBLE);
                 toolbarTitle.setText(R.string.sources);
 
-                switch (tab.getPosition()){
+                switch (tab.getPosition()) {
                     case 0:// все
                         list = Initializer.getSourceSync().getAll();
                         break;
@@ -98,10 +99,12 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
 
         });
     }
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity
 
                 Source source = new DefaultSource();
 
-                if (selectedParentNode != null){// если мы находимся в родительском элементе - передать тип
+                if (selectedParentNode != null) {// если мы находимся в родительском элементе - передать тип
                     source.setOperationType(((Source) selectedParentNode).getOperationType());
                 }
 
@@ -163,7 +166,6 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-
 
 
     private void initFloatingButton() {
@@ -246,7 +248,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(TreeNode selectedParentNode) {// при каждом нажатии на элемент списка - срабатывает этот слушатель событий - записывает выбранный node
+    public void onClickNode(TreeNode selectedParentNode) {// при каждом нажатии на элемент списка - срабатывает этот слушатель событий - записывает выбранный node
 
         if (selectedParentNode.hasChilds()) {
             this.selectedParentNode = selectedParentNode;// в selectedParentNode хранится ссылка на выбранную родительскую категорию
@@ -255,27 +257,41 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onPopupShow(TreeNode selectedParentNode) {
+        this.selectedParentNode = selectedParentNode;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK){
+        TreeNode node = null;
+
+        if (resultCode == RESULT_OK) {
 
             switch (requestCode) {
                 case REQUEST_NODE_EDIT:
-                    sprListFragment.updateRow((TreeNode)data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
+                    sprListFragment.updateRow((TreeNode) data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
                     break;
 
                 case REQUEST_NODE_ADD:
+                    node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
 
-                    TreeNode node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
-
-                    if(selectedParentNode !=null){// если создаем дочерний элемент, а не корневой
-                        node.setParent(selectedParentNode);
+                    if (selectedParentNode != null) {// если создаем дочерний элемент, а не корневой
+                        node.setParent(selectedParentNode);// setParent нужно выполнять, когда объект уже вернулся из активити
                     }
 
                     sprListFragment.insertNode(node);// отправляем на добавление новый объект
+                    break;
+
+                case REQUEST_NODE_ADD_CHILD:
+
+                    node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
+                    node.setParent(selectedParentNode);
+
+                    sprListFragment.insertChild(node);// отправляем на добавление новый объект
                     break;
 
 

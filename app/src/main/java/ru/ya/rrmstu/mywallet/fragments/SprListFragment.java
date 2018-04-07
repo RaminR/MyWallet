@@ -34,8 +34,8 @@ public class SprListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SprListFragment() {}// фрагмент рекомендуется создавать пустым конструктором
-
+    public SprListFragment() {
+    }// фрагмент рекомендуется создавать пустым конструктором
 
 
     // TODO: Customize parameter initialization
@@ -104,6 +104,10 @@ public class SprListFragment extends Fragment {
         treeNodeAdapter.insertNode(node);
     }
 
+    public void insertChild(TreeNode node) {
+        treeNodeAdapter.insertChild(node);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -115,6 +119,8 @@ public class SprListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener { // интерфейс для слушателя события при нажатии записи списка
-        void onListFragmentInteraction(TreeNode selectedNode);
+        void onClickNode(TreeNode selectedNode);
+
+        void onPopupShow(TreeNode selectedNode);
     }
 }

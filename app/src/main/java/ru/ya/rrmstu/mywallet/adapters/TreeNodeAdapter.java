@@ -40,16 +40,16 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
     private static final String TAG = TreeNodeAdapter.class.getName();
 
     private List<T> list;
-    private final SprListFragment.OnListFragmentInteractionListener clickListener;// хранит слушателя события нажатия пункта
+    private final SprListFragment.OnListFragmentInteractionListener listener;// хранит слушателя события нажатия пункта
     private Context context;
     private int currentEditPosition;
 
     private Snackbar snackbar; // для возможности отменить удаление
 
 
-    public TreeNodeAdapter(List<T> list, SprListFragment.OnListFragmentInteractionListener clickListener, Context context) {
+    public TreeNodeAdapter(List<T> list, SprListFragment.OnListFragmentInteractionListener listener, Context context) {
         this.list = list;
-        this.clickListener = clickListener;
+        this.listener = listener;
         this.context = context;
     }
 
@@ -86,15 +86,15 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                 T treeNode = list.get(position);// определяем объект
 
                 // если был присвоен слушатель
-                if (clickListener != null) {
+                if (listener != null) {
                     // уведомляем слушателя, что был нажат пункт из списка
-                    clickListener.onListFragmentInteraction(treeNode);// передаем, какой именно объект был нажат
+                    listener.onClickNode(treeNode);// передаем, какой именно объект был нажат
                 }
 
 
                 if (treeNode.hasChilds()) {// если есть дочерние значения
                     updateData((List<T>) treeNode.getChilds());// показать дочек
-                }else{
+                } else {
                     runEditActivity(context, node, position);// если нет дочерних - открываем пункт для редактирования
                 }
 
@@ -115,7 +115,6 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         this.list = list;
         notifyDataSetChanged(); // сигнализируем адаптеру, что данные изменились, чтобы он обновился
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -157,6 +156,11 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                         // считываем, какой пункт нажали по его id
                         if (id == R.id.item_child_add) {
 
+                            Source source = new DefaultSource();
+                            source.setOperationType(((Source) node).getOperationType());
+
+                            listener.onPopupShow(node);
+                            runAddChildActivity(context, (T) source, position);
 
                         } else if (id == R.id.item_edit) {
                             runEditActivity(context, node, position);
@@ -236,14 +240,20 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     }
 
+    private void runAddChildActivity(Context context, T node, int position) {
 
+        Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
+        intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
+        ((Activity) context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_ADD_CHILD); // REQUEST_NODE_ADD - индикатор, кто является инициатором
+
+    }
 
     // вызвать активити для редактирования справочного значения и вернуть результат в основной активити
     private void runEditActivity(Context context, T node, int position) {
 
         Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
         intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
-        ((Activity)context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_EDIT); // REQUEST_NODE_EDIT - индикатор, кто является инициатором
+        ((Activity) context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_EDIT); // REQUEST_NODE_EDIT - индикатор, кто является инициатором
 
         currentEditPosition = position;
     }
@@ -268,8 +278,20 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     public void insertNode(TreeNode node) {
         try {
-            Source source = (Source)node;
+            Source source = (Source) node;
             Initializer.getSourceSync().add(source);
+            notifyDataSetChanged();
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public void insertChild(TreeNode node) {
+        try {
+            Source source = (Source) node;
+            Initializer.getSourceSync().add(source);
+            list = (List<T>) node.getParent().getChilds(); // показываем список дочерних элементов, где только что добавили элемент
+            listener.onClickNode(node.getParent());
             notifyDataSetChanged();
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
@@ -279,7 +301,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     public void updateNode(T node) {
         try {
-            Initializer.getSourceSync().update((Source)node);
+            Initializer.getSourceSync().update((Source) node);
             notifyItemChanged(currentEditPosition);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
