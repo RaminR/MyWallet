@@ -22,20 +22,27 @@ import java.util.List;
 import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.mywallet.core.database.Initializer;
 import ru.ya.rrmstu.mywallet.core.enums.OperationType;
+import ru.ya.rrmstu.mywallet.core.impls.DefaultSource;
+import ru.ya.rrmstu.mywallet.core.interfaces.Source;
 import ru.ya.rrmstu.mywallet.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
+
+import static ru.ya.rrmstu.mywallet.activities.EditSourceActivity.NODE_OBJECT;
+import static ru.ya.rrmstu.mywallet.activities.EditSourceActivity.REQUEST_NODE_ADD;
+import static ru.ya.rrmstu.mywallet.activities.EditSourceActivity.REQUEST_NODE_EDIT;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SprListFragment.OnListFragmentInteractionListener {
 
 
     private ImageView iconBack;
+    private ImageView iconAdd;
     private Toolbar toolbar;
     private TextView toolbarTitle;
 
     private TabLayout tabLayout;
 
-    private TreeNode selectedNode;
+    private TreeNode selectedParentNode;
 
     private SprListFragment sprListFragment;
 
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity
                 iconBack.setVisibility(View.INVISIBLE);
                 toolbarTitle.setText(R.string.sources);
 
-                switch (tab.getPosition()) {
+                switch (tab.getPosition()){
                     case 0:// все
                         list = Initializer.getSourceSync().getAll();
                         break;
@@ -91,12 +98,10 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
 
         });
     }
@@ -115,26 +120,51 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        iconBack = (ImageView) findViewById(R.id.ic_back);
+        iconBack = (ImageView) findViewById(R.id.ic_back_node);
+        iconAdd = (ImageView) findViewById(R.id.ic_add_node);
 
+
+        // при нажатии на кнопку перехода к родительским элементам справочника
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selectedNode.getParent() == null) {// показать корневые элементы
+                if (selectedParentNode.getParent() == null) {// показать корневые элементы
                     sprListFragment.updateData(list);
                     toolbarTitle.setText(R.string.sources);
                     iconBack.setVisibility(View.INVISIBLE);
+                    selectedParentNode = null; // указывает, что никакой node не выбран в данный момент
                 } else {// показать родительские элементы
-                    sprListFragment.updateData(selectedNode.getParent().getChilds());
-                    selectedNode = selectedNode.getParent();
-                    toolbarTitle.setText(selectedNode.getName());
+                    sprListFragment.updateData(selectedParentNode.getParent().getChilds());
+                    selectedParentNode = selectedParentNode.getParent(); // в переменной selectedParentNode всегда должна быть родительская категория, в которой мы находимся в данный момент
+                    toolbarTitle.setText(selectedParentNode.getName());
 
                 }
 
             }
         });
 
+
+        // при нажатии на кнопку добавления элемента
+        iconAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Source source = new DefaultSource();
+
+                if (selectedParentNode != null){// если мы находимся в родительском элементе - передать тип
+                    source.setOperationType(((Source) selectedParentNode).getOperationType());
+                }
+
+                Intent intent = new Intent(MainActivity.this, EditSourceActivity.class); // какой акивити хоти вызвать
+                intent.putExtra(NODE_OBJECT, source); // помещаем выбранный объект node для передачи в активити
+                startActivityForResult(intent, REQUEST_NODE_ADD); // REQUEST_NODE_ADD - индикатор, кто является инициатором
+
+            }
+        });
+
     }
+
+
 
     private void initFloatingButton() {
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -171,7 +201,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+//        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -216,10 +246,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(TreeNode selectedNode) {
-        this.selectedNode = selectedNode;
-        if (selectedNode.hasChilds()) {
-            toolbarTitle.setText(selectedNode.getName());// показывает выбранную категорию
+    public void onListFragmentInteraction(TreeNode selectedParentNode) {// при каждом нажатии на элемент списка - срабатывает этот слушатель событий - записывает выбранный node
+
+        if (selectedParentNode.hasChilds()) {
+            this.selectedParentNode = selectedParentNode;// в selectedParentNode хранится ссылка на выбранную родительскую категорию
+            toolbarTitle.setText(selectedParentNode.getName());// показывает выбранную категорию
             iconBack.setVisibility(View.VISIBLE);
         }
     }
@@ -229,10 +260,28 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EditSourceActivity.REQUEST_NODE_EDIT) {// кто был инициатором вызова
-            if (resultCode == RESULT_OK) { // какой результат вернулся
-                sprListFragment.updateRow((TreeNode) data.getSerializableExtra(EditSourceActivity.NODE_OBJECT));// отправляем на обновление измененный объект
+        if (resultCode == RESULT_OK){
+
+            switch (requestCode) {
+                case REQUEST_NODE_EDIT:
+                    sprListFragment.updateRow((TreeNode)data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
+                    break;
+
+                case REQUEST_NODE_ADD:
+
+                    TreeNode node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
+
+                    if(selectedParentNode !=null){// если создаем дочерний элемент, а не корневой
+                        node.setParent(selectedParentNode);
+                    }
+
+                    sprListFragment.insertNode(node);// отправляем на добавление новый объект
+                    break;
+
+
             }
+
         }
+
     }
 }

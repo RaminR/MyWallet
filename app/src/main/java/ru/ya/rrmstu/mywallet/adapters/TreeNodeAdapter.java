@@ -94,7 +94,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
                 if (treeNode.hasChilds()) {// если есть дочерние значения
                     updateData((List<T>) treeNode.getChilds());// показать дочек
-                } else {
+                }else{
                     runEditActivity(context, node, position);// если нет дочерних - открываем пункт для редактирования
                 }
 
@@ -115,6 +115,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         this.list = list;
         notifyDataSetChanged(); // сигнализируем адаптеру, что данные изменились, чтобы он обновился
     }
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -154,7 +155,8 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
                         int id = menuItem.getItemId();
 
                         // считываем, какой пункт нажали по его id
-                        if (id == R.id.item_add) {
+                        if (id == R.id.item_child_add) {
+
 
                         } else if (id == R.id.item_edit) {
                             runEditActivity(context, node, position);
@@ -234,12 +236,14 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
 
     }
 
+
+
     // вызвать активити для редактирования справочного значения и вернуть результат в основной активити
     private void runEditActivity(Context context, T node, int position) {
 
         Intent intent = new Intent(context, EditSourceActivity.class); // какой акивити хоти вызвать
         intent.putExtra(EditSourceActivity.NODE_OBJECT, node); // помещаем выбранный объект node для передачи в активити
-        ((Activity) context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_EDIT); // REQUEST_NODE_EDIT - индикатор, кто является инициатором
+        ((Activity)context).startActivityForResult(intent, EditSourceActivity.REQUEST_NODE_EDIT); // REQUEST_NODE_EDIT - индикатор, кто является инициатором
 
         currentEditPosition = position;
     }
@@ -262,9 +266,20 @@ public class TreeNodeAdapter<T extends TreeNode> extends RecyclerView.Adapter<Tr
         }
     }
 
+    public void insertNode(TreeNode node) {
+        try {
+            Source source = (Source)node;
+            Initializer.getSourceSync().add(source);
+            notifyDataSetChanged();
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+
     public void updateNode(T node) {
         try {
-            Initializer.getSourceSync().update((Source) node);
+            Initializer.getSourceSync().update((Source)node);
             notifyItemChanged(currentEditPosition);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());

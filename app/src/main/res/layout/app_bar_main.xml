@@ -19,24 +19,47 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
 
-            <ImageView
-                android:id="@+id/ic_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:src="@android:drawable/ic_menu_revert"
-                android:visibility="invisible" />
-
-
-            <TextView
-                android:id="@+id/toolbar_title"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical|center"
-                android:text="@string/sources" />
+
+                android:baselineAligned="false">
+
+                <ImageView
+                    android:id="@+id/ic_back_node"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:paddingLeft="10dp"
+                    android:src="@android:drawable/ic_menu_revert"
+
+                    android:visibility="invisible" />
+
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/sources" />
+
+                <ImageView
+                    android:id="@+id/ic_add_node"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingRight="10dp"
+                    android:src="@android:drawable/ic_menu_add" />
+
+            </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
-
 
 
         <android.support.design.widget.TabLayout
@@ -48,30 +71,29 @@
 
 
             >
+
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_all"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="All"
-                />
+                android:text="All" />
 
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_income"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Income"
-                />
+                android:text="Income" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_outcome"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Outcome"
-                />
-
+                android:text="Outcome" />
 
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
-
 
 
     <include layout="@layout/content_main" />

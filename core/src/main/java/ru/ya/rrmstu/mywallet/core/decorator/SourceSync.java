@@ -53,6 +53,7 @@ public class SourceSync implements SourceDAO {
 //        }
 
 
+
         for (OperationType type : OperationType.values()) {
             ArrayList<Source> incomeSources = new ArrayList<>();
             ArrayList<Source> outcomeSources = new ArrayList<>();
@@ -61,23 +62,23 @@ public class SourceSync implements SourceDAO {
 
             // проход по коллекции только один раз
             for (Source o : list) {
-                switch (o.getOperationType()) {
-                    case INCOME: {
+                switch (o.getOperationType()){
+                    case INCOME:{
                         incomeSources.add(o);
                         break;
                     }
 
-                    case OUTCOME: {
+                    case OUTCOME:{
                         outcomeSources.add(o);
                         break;
                     }
 
-                    case TRANSFER: {
+                    case TRANSFER:{
                         transferSources.add(o);
                         break;
                     }
 
-                    case CONVERT: {
+                    case CONVERT:{
                         convertSources.add(o);
                         break;
                     }
@@ -90,6 +91,8 @@ public class SourceSync implements SourceDAO {
             sourceMap.put(OperationType.TRANSFER, transferSources);
 
         }
+
+
 
 
     }
@@ -119,7 +122,7 @@ public class SourceSync implements SourceDAO {
 
 
     @Override
-    public boolean delete(Source source) throws SQLException {
+    public boolean delete(Source source) throws SQLException{
         // TODO добавить нужные Exceptions
         if (sourceDAO.delete(source)) {
             removeFromCollections(source);
@@ -154,7 +157,7 @@ public class SourceSync implements SourceDAO {
     }
 
     @Override
-    public boolean add(Source source) throws SQLException {
+    public boolean add(Source source) throws SQLException{
         if (sourceDAO.add(source)) {// если в БД добавился нормально
             addToCollections(source);
             return true;
