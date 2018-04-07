@@ -2,6 +2,7 @@ package ru.ya.rrmstu.mywallet.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +16,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import ru.ya.rrmstu.core.database.Initializer;
+import ru.ya.rrmstu.core.enums.OperationType;
 import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
@@ -29,9 +33,13 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private TextView toolbarTitle;
 
+    private TabLayout tabLayout;
+
     private TreeNode selectedNode;
 
     private SprListFragment sprListFragment;
+
+    private List<? extends TreeNode> list;// хранит корневые элементы списка
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +55,57 @@ public class MainActivity extends AppCompatActivity
         initNavigationDrawer(toolbar);
 
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        initFragment();
+
+
+        initTabs();
+
+
+    }
+
+
+    private void initTabs() {
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                switch (tab.getPosition()) {
+                    case 0:// все
+                        list = Initializer.getSourceSync().getAll();
+                        break;
+                    case 1:// доход
+                        list = Initializer.getSourceSync().getList(OperationType.INCOME);
+                        break;
+                    case 2: // расход
+                        list = Initializer.getSourceSync().getList(OperationType.OUTCOME);
+                        break;
+                }
+
+                sprListFragment.updateData(list);
+
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void initFragment() {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         sprListFragment = new SprListFragment();
         fragmentTransaction.replace(R.id.spr_list_fragment, sprListFragment);
-
-// fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-
     }
 
 
@@ -64,13 +114,13 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        backIcon = (ImageView) findViewById(R.id.back_icon);
+        backIcon = (ImageView) findViewById(R.id.ic_back);
 
         backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (selectedNode.getParent() == null) {// показать корневые элементы
-                    sprListFragment.updateData(Initializer.getSourceSync().getAll());
+                    sprListFragment.updateData(list);
                     toolbarTitle.setText(R.string.sources);
                     backIcon.setVisibility(View.INVISIBLE);
                 } else {// показать родительские элементы
