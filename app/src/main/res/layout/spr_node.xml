@@ -3,49 +3,123 @@
     android:id="@+id/spr_main_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp">
+    android:background="@drawable/ripple_rectangle"
 
-    <ImageView
-        android:id="@+id/img_node_icon"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginLeft="15dp"
-        android:src="@drawable/ic_empty"
-        android:tint="@color/colorPrimaryText" />
 
-    <TextView
-        android:id="@+id/tv_node_name"
-        android:layout_width="wrap_content"
+    >
+
+    <com.malinskiy.superrecyclerview.swipe.SwipeLayout xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        android:id="@id/recyclerview_swipe"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/img_node_icon"
-        android:text="value"
-        android:textSize="17sp" />
+        android:background="@drawable/ripple_rectangle"
+
+        >
+
+        <LinearLayout xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorSwipeBackground"
+            android:gravity="center"
 
 
-    <ImageView
-        android:id="@+id/img_node_popup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_more"
-        android:tint="@color/colorPrimaryText" />
+            >
 
-    <TextView
-        android:id="@+id/tv_node_child_count"
-        android:layout_width="20dp"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        android:layout_toLeftOf="@id/img_node_popup"
-        android:background="@color/colorSecondaryText"
-        android:text="10"
-        android:textAlignment="center"
-        android:textColor="@android:color/white" />
+            <ImageView
+                android:id="@+id/img_swipe_add_child_node"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_circle"
+                android:tint="@android:color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="10dp"
+                android:background="@drawable/ripple_oval_gray"
+                />
+
+
+            <ImageView
+                android:id="@+id/img_swipe_edit_node"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit_35"
+                android:tint="@android:color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="10dp"
+                android:background="@drawable/ripple_oval_gray"
+
+
+                />
+
+            <ImageView
+                android:id="@+id/img_swipe_delete_node"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete_circle"
+                android:tint="@android:color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="10dp"
+                android:background="@drawable/ripple_oval_gray"
+
+
+                />
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:id="@+id/img_node_icon"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_empty"
+                android:tint="@color/colorSecondaryText" />
+
+            <TextView
+                android:id="@+id/tv_node_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/img_node_icon"
+                android:text="value"
+                android:textSize="17sp" />
+
+
+            <ImageView
+                android:id="@+id/img_node_popup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ripple_oval_gray"
+                android:padding="5dp"
+                android:src="@drawable/ic_more"
+                android:tint="@color/colorSecondaryText" />
+
+            <TextView
+                android:id="@+id/tv_node_child_count"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@id/img_node_popup"
+                android:background="@color/colorSecondaryText"
+                android:text="10"
+                android:textAlignment="center"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+    </com.malinskiy.superrecyclerview.swipe.SwipeLayout>
 
 
 </RelativeLayout>

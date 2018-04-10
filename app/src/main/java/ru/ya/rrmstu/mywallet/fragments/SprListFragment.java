@@ -5,11 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
@@ -61,9 +61,9 @@ public class SprListFragment extends Fragment {
         View view = inflater.inflate(R.layout.spr_list, container, false);
 
 
-        if (view instanceof RecyclerView) {
+        if (view instanceof SuperRecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            SuperRecyclerView recyclerView = (SuperRecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));// выбираем стандартный тип показа - как список
 
             // добавить разделитель между элементами списка

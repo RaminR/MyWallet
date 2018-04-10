@@ -53,7 +53,7 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
         spSourceType = (Spinner) findViewById(R.id.sp_source_type);
 
 
-        spAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, OperationType.getList().subList(0, 2));// нам нужны только доход и расход для категорий
+        spAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, OperationType.getList().subList(0,2));// нам нужны только доход и расход для категорий
 
         spSourceType.setAdapter(spAdapter);
 
@@ -63,17 +63,17 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
 
 
         // в зависимости от типа действия (создание или редактирование) - меняем заголовок
-        if (node.getName() != null) {
+        if (node.getName()!=null){
             tvNodeName.setText(R.string.editing);
             etName.setText(node.getName());
-        } else {
+        }else{
             tvNodeName.setText(R.string.adding);
             etName.setText("");
 
         }
 
 
-        if (node.getOperationType() != null) {// при редактировании объекта - это поле будет заполнено
+        if (node.getOperationType()!=null) {// при редактировании объекта - это поле будет заполнено
             spSourceType.setEnabled(false);
             spSourceType.setSelection(OperationType.getList().indexOf(node.getOperationType()));
         }
@@ -133,5 +133,6 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
         Slide slide2 = new Slide(Gravity.TOP);
         slide2.setDuration(500);
         getWindow().setExitTransition(slide2);
+
     }
 }

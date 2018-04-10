@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         initToolbar();
 
         //initFloatingButton();
@@ -76,6 +75,10 @@ public class MainActivity extends AppCompatActivity
 
     private void initTabs() {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        tabLayout.getTabAt(0).setText(R.string.tab_all);
+        tabLayout.getTabAt(1).setText(R.string.tab_income);
+        tabLayout.getTabAt(2).setText(R.string.tab_outcome);
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 sprListFragment.showNodes(currentList);
-
+                selectedParentNode = null; // сбрасываем, в данный момент никакой родительский элемент не выбран
 
             }
 

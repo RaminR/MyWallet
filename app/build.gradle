@@ -42,4 +42,6 @@ dependencies {
     implementation 'com.jpardogo.googleprogressbar:library:+'
     implementation 'com.yqritc:recyclerview-flexibledivider:+'
     implementation 'jp.wasabeef:recyclerview-animators:+'
+    implementation 'com.malinskiy:superrecyclerview:+'
+    implementation 'net.steamcrafted:materialiconlib:+'
 }
