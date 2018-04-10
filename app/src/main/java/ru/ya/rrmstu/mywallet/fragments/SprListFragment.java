@@ -36,8 +36,8 @@ public class SprListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SprListFragment() {
-    }// фрагмент рекомендуется создавать пустым конструктором
+    public SprListFragment() {}// фрагмент рекомендуется создавать пустым конструктором
+
 
 
     // TODO: Customize parameter initialization
@@ -60,7 +60,7 @@ public class SprListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.spr_list, container, false);
 
-        // Set the adapter
+
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -71,15 +71,22 @@ public class SprListFragment extends Fragment {
                     .marginResId(R.dimen.divider_left_margin, R.dimen.divider_right_margin)
                     .build());
 
+
+
             recyclerView.setAdapter(treeNodeAdapter);
         }
         return view;
     }
 
 
-    public void updateData(List<? extends TreeNode> list) {
-        treeNodeAdapter.updateData(list);
+    public void showNodes(List<? extends TreeNode> list) {
+        treeNodeAdapter.updateData(list, TreeNodeAdapter.animatorParents);
     }
+
+
+//    public void updateData(List<? extends TreeNode> list, RecyclerView.ItemAnimator animator) {
+//        treeNodeAdapter.updateData(list, animator);
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -104,16 +111,16 @@ public class SprListFragment extends Fragment {
         clickListener = null;// при смене или удалении фрагмента из активити - зануляем слушатель
     }
 
-    public void updateRow(TreeNode node) {
+    public void updateNode(TreeNode node) {
         treeNodeAdapter.updateNode(node);
     }
 
-    public void insertNode(TreeNode node) {
-        treeNodeAdapter.insertNode(node);
+    public void insertRootNode(TreeNode node) {
+        treeNodeAdapter.insertRootNode(node);
     }
 
-    public void insertChild(TreeNode node) {
-        treeNodeAdapter.insertChild(node);
+    public void insertChildNode(TreeNode node) {
+        treeNodeAdapter.insertChildNode(node);
     }
 
     /**
@@ -128,7 +135,6 @@ public class SprListFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener { // интерфейс для слушателя события при нажатии записи списка
         void onClickNode(TreeNode selectedNode);
-
         void onPopupShow(TreeNode selectedNode);
     }
 }

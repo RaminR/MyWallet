@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="ru.ya.rrmstu.mywallet.activities.MainActivity">
 
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -46,7 +45,9 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="@string/sources" />
+                    android:paddingRight="40dp"
+                    android:text="@string/sources"
+                    android:textAppearance="@android:style/TextAppearance.Material.Title" />
 
                 <ImageView
                     android:id="@+id/ic_add_node"
@@ -77,20 +78,21 @@
                 android:id="@+id/tab_all"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="All" />
+                android:text="@string/tab_all" />
 
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_income"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Income" />
+                android:text="@string/tab_income" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_outcome"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Outcome" />
+                android:text="@string/tab_outcome" />
+
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>

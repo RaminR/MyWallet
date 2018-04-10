@@ -41,5 +41,5 @@ dependencies {
     implementation 'org.sqldroid:sqldroid:+'
     implementation 'com.jpardogo.googleprogressbar:library:+'
     implementation 'com.yqritc:recyclerview-flexibledivider:+'
-
+    implementation 'jp.wasabeef:recyclerview-animators:+'
 }

@@ -2,10 +2,14 @@ package ru.ya.rrmstu.mywallet.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,7 +18,6 @@ import android.widget.Toast;
 import ru.ya.rrmstu.mywallet.R;
 import ru.ya.rrmstu.mywallet.core.enums.OperationType;
 import ru.ya.rrmstu.mywallet.core.interfaces.Source;
-import ru.ya.rrmstu.mywallet.core.interfaces.TreeNode;
 
 // отвеачает за добавление и редактирование категории
 public class EditSourceActivity<T extends Source> extends AppCompatActivity {// можно использовать более конктрентый тип Source - т.к. этот активити работает только с Source
@@ -27,8 +30,10 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
 
 
     private Toolbar toolbar;
-    private TextView etName;
+    private EditText etName;
+    private TextView tvNodeName;
     private ImageView imgSave;
+    private ImageView imgClose;
     private Spinner spSourceType;
     private ArrayAdapter<OperationType> spAdapter;
 
@@ -38,13 +43,17 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_source);
 
+        setupAnimation();
+
         toolbar = (Toolbar) findViewById(R.id.toolbar_edit_source);
-        etName = (TextView) findViewById(R.id.et_source_name);
+        etName = (EditText) findViewById(R.id.et_source_name);
+        tvNodeName = (TextView) findViewById(R.id.tv_node_name);
         imgSave = (ImageView) findViewById(R.id.img_node_save);
+        imgClose = (ImageView) findViewById(R.id.img_node_close);
         spSourceType = (Spinner) findViewById(R.id.sp_source_type);
 
 
-        spAdapter = new ArrayAdapter<OperationType>(this, android.R.layout.simple_spinner_item, OperationType.getList().subList(0, 2));// нам нужны только доход и расход для категорий
+        spAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, OperationType.getList().subList(0, 2));// нам нужны только доход и расход для категорий
 
         spSourceType.setAdapter(spAdapter);
 
@@ -52,7 +61,16 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
 
         final T node = (T) getIntent().getSerializableExtra(NODE_OBJECT); // получаем переданный объект для редактирования
 
-        etName.setText(node.getName());
+
+        // в зависимости от типа действия (создание или редактирование) - меняем заголовок
+        if (node.getName() != null) {
+            tvNodeName.setText(R.string.editing);
+            etName.setText(node.getName());
+        } else {
+            tvNodeName.setText(R.string.adding);
+            etName.setText("");
+
+        }
 
 
         if (node.getOperationType() != null) {// при редактировании объекта - это поле будет заполнено
@@ -61,6 +79,7 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
         }
 
 
+        // слушатель события при сохранении
         imgSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,8 +104,34 @@ public class EditSourceActivity<T extends Source> extends AppCompatActivity {// 
                     setResult(RESULT_OK, intent);
 
                 }
-                finish();// закрыть активити
+                finishWithTransition();// закрыть активити
             }
         });
+
+
+        // слушатель события при отмене
+        imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishWithTransition();
+            }
+        });
+
+    }
+
+    private void finishWithTransition() {
+        ActivityCompat.finishAfterTransition(EditSourceActivity.this);
+    }
+
+    private void setupAnimation() {
+        // при открытии активити
+        Slide slide = new Slide(Gravity.BOTTOM);
+        slide.setDuration(300);
+        getWindow().setEnterTransition(slide);
+
+        // при закрытии активити
+        Slide slide2 = new Slide(Gravity.TOP);
+        slide2.setDuration(500);
+        getWindow().setExitTransition(slide2);
     }
 }

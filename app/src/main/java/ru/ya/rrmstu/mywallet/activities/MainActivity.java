@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -49,12 +50,13 @@ public class MainActivity extends AppCompatActivity
 
     private SprListFragment sprListFragment;
 
-    private List<? extends TreeNode> list;// хранит корневые элементы списка
+    private List<? extends TreeNode> currentList;// текущий список для отображения
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         initToolbar();
 
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
         initTabs();
 
-        list = Initializer.getSourceSync().getAll();
+        currentList = Initializer.getSourceSync().getAll();
 
 
     }
@@ -85,20 +87,20 @@ public class MainActivity extends AppCompatActivity
 
                 switch (tab.getPosition()) {
                     case 0:// все
-                        list = Initializer.getSourceSync().getAll();
+                        currentList = Initializer.getSourceSync().getAll();
                         defaultType = null;
                         break;
                     case 1:// доход
-                        list = Initializer.getSourceSync().getList(OperationType.INCOME);
+                        currentList = Initializer.getSourceSync().getList(OperationType.INCOME);
                         defaultType = OperationType.INCOME;
                         break;
                     case 2: // расход
-                        list = Initializer.getSourceSync().getList(OperationType.OUTCOME);
+                        currentList = Initializer.getSourceSync().getList(OperationType.OUTCOME);
                         defaultType = OperationType.OUTCOME;
                         break;
                 }
 
-                sprListFragment.updateData(list);
+                sprListFragment.showNodes(currentList);
 
 
             }
@@ -136,17 +138,18 @@ public class MainActivity extends AppCompatActivity
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (selectedParentNode.getParent() == null) {// показать корневые элементы
-                    sprListFragment.updateData(list);
+                    sprListFragment.showNodes(currentList);
                     toolbarTitle.setText(R.string.sources);
                     iconBack.setVisibility(View.INVISIBLE);
                     selectedParentNode = null; // указывает, что никакой node не выбран в данный момент
                 } else {// показать родительские элементы
-                    sprListFragment.updateData(selectedParentNode.getParent().getChilds());
+                    sprListFragment.showNodes(selectedParentNode.getParent().getChilds());
                     selectedParentNode = selectedParentNode.getParent(); // в переменной selectedParentNode всегда должна быть родительская категория, в которой мы находимся в данный момент
                     toolbarTitle.setText(selectedParentNode.getName());
-
                 }
+
 
             }
         });
@@ -160,14 +163,14 @@ public class MainActivity extends AppCompatActivity
                 Source source = new DefaultSource();
 
                 // если пользователь выбрал таб и создает новый элемент - сразу прописываем тип
-                if (defaultType!=null){
-                    source.setOperationType(((Source) selectedParentNode).getOperationType());
+                if (defaultType != null) {
+                    source.setOperationType(defaultType);
                 }
 
 
                 Intent intent = new Intent(MainActivity.this, EditSourceActivity.class); // какой акивити хоти вызвать
                 intent.putExtra(NODE_OBJECT, source); // помещаем выбранный объект node для передачи в активити
-                startActivityForResult(intent, REQUEST_NODE_ADD); // REQUEST_NODE_ADD - индикатор, кто является инициатором
+                startActivityForResult(intent, REQUEST_NODE_ADD, ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this).toBundle()); // REQUEST_NODE_EDIT - индикатор, кто является инициатором); // REQUEST_NODE_ADD - индикатор, кто является инициатором
 
             }
         });
@@ -280,7 +283,7 @@ public class MainActivity extends AppCompatActivity
 
             switch (requestCode) {
                 case REQUEST_NODE_EDIT:
-                    sprListFragment.updateRow((TreeNode) data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
+                    sprListFragment.updateNode((TreeNode) data.getSerializableExtra(NODE_OBJECT));// отправляем на обновление измененный объект
                     break;
 
                 case REQUEST_NODE_ADD:
@@ -290,7 +293,7 @@ public class MainActivity extends AppCompatActivity
                         node.setParent(selectedParentNode);// setParent нужно выполнять, когда объект уже вернулся из активити
                     }
 
-                    sprListFragment.insertNode(node);// отправляем на добавление новый объект
+                    sprListFragment.insertRootNode(node);// отправляем на добавление новый объект
                     break;
 
                 case REQUEST_NODE_ADD_CHILD:
@@ -298,13 +301,10 @@ public class MainActivity extends AppCompatActivity
                     node = (TreeNode) data.getSerializableExtra(NODE_OBJECT);
                     node.setParent(selectedParentNode);
 
-                    sprListFragment.insertChild(node);// отправляем на добавление новый объект
+                    sprListFragment.insertChildNode(node);// отправляем на добавление новый объект
                     break;
 
-
             }
-
         }
-
     }
 }
