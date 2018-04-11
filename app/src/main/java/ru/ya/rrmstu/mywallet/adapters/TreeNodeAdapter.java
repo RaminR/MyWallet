@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -36,6 +37,7 @@ import ru.ya.rrmstu.mywallet.core.impls.DefaultSource;
 import ru.ya.rrmstu.mywallet.core.interfaces.Source;
 import ru.ya.rrmstu.mywallet.core.interfaces.TreeNode;
 import ru.ya.rrmstu.mywallet.fragments.SprListFragment;
+import ru.ya.rrmstu.mywallet.utils.IconUtils;
 
 
 /**
@@ -158,6 +160,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
 
         };
 
+
     }
 
     @Override
@@ -177,6 +180,15 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
             holder.tvChildCount.setBackground(null);// чтобы не рисовал пустую закрашенную область
             holder.imgSwipeDeleteNode.setVisibility(View.VISIBLE);
         }
+
+        // если пользователем не установлена иконка - показываем иконку по-умолчанию
+        if (node.getIconName() == null || IconUtils.iconsMap.get(node.getIconName()) == null) {
+            holder.imgNodeIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_empty, null));
+        } else {
+            holder.imgNodeIcon.setImageDrawable(IconUtils.iconsMap.get(node.getIconName()));
+
+        }
+
 
         // для каждого пункта формируем слушатель для popup меню
         initPopup(holder.btnPopup, context, node, position);
@@ -227,7 +239,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
                 if (treeNode.hasChilds()) {// если есть дочерние значения
                     updateData((List<T>) treeNode.getChilds(), animatorChilds);// показать дочек
                 } else {
-                    runActivity(node, EditSourceActivity.REQUEST_NODE_EDIT);// если нет дочерних - открываем пункт для редактирования
+                    editNode(position, node);// если нет дочерних - открываем пункт для редактирования
                 }
 
             }
@@ -274,6 +286,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
         public final ImageView imgSwipeDeleteNode;
         public final ImageView imgSwipeAddChildNode;
         public final ImageView imgSwipeEditNode;
+        public final ImageView imgNodeIcon;
 
         public ViewHolder(View view) {
             super(view);
@@ -286,6 +299,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
             imgSwipeDeleteNode = (ImageView) view.findViewById(R.id.img_swipe_delete_node);
             imgSwipeAddChildNode = (ImageView) view.findViewById(R.id.img_swipe_add_child_node);
             imgSwipeEditNode = (ImageView) view.findViewById(R.id.img_swipe_edit_node);
+            imgNodeIcon = (ImageView) view.findViewById(R.id.img_node_icon);
 
         }
 
@@ -456,7 +470,7 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
             Source source = (Source) node;
             Initializer.getSourceSync().add(source);// сначала вставляем в БД и общую коллекцию
             adapterList.add(node); // потом - в текущую временную коллекцию адаптера
-            notifyItemInserted(adapterList.size());// вставка в последнюю позицию
+            notifyItemInserted(adapterList.indexOf(node));// вставка в последнюю позицию
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -468,11 +482,11 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
             Source source = (Source) node;
             Initializer.getSourceSync().add(source);
 
-            List<T> list = (List<T>) node.getParent().getChilds();
+            List<T> list = (List<T>) node.getParent().getChilds(); // загрузить все дочерние элементы родителя, для которого добавили элемент
 
-            updateData(list, animatorChilds);  // показываем список дочерних элементов, где только что добавили элемент
+            updateData(list, animatorChilds);  // показываем список дочерних элементов, среди которых и новый добавленный
 
-            listener.onClickNode(node.getParent());
+            listener.onClickNode(node.getParent()); // уведомляем слушателя, что перешли в дочерний список
 
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
@@ -484,9 +498,11 @@ public class TreeNodeAdapter<T extends TreeNode> extends BaseSwipeAdapter<TreeNo
     public void updateNode(T node) {
         try {
             Initializer.getSourceSync().update((Source) node);
+            adapterList.set(currentEditPosition, node);
             notifyItemChanged(currentEditPosition);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }
+
     }
 }

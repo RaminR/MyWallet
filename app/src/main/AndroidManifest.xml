@@ -28,6 +28,14 @@
         <activity
             android:name=".activities.EditSourceActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.SelectIconActivity"
+            android:label="@string/title_activity_select_icon"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.AbstractAnimationActivity"
+            android:label="@string/title_activity_abstract_animation"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

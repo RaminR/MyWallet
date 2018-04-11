@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         initToolbar();
 
         //initFloatingButton();
@@ -147,6 +148,7 @@ public class MainActivity extends AppCompatActivity
                     toolbarTitle.setText(R.string.sources);
                     iconBack.setVisibility(View.INVISIBLE);
                     selectedParentNode = null; // указывает, что никакой node не выбран в данный момент
+                    defaultType = null;
                 } else {// показать родительские элементы
                     sprListFragment.showNodes(selectedParentNode.getParent().getChilds());
                     selectedParentNode = selectedParentNode.getParent(); // в переменной selectedParentNode всегда должна быть родительская категория, в которой мы находимся в данный момент
@@ -203,13 +205,19 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            if (iconBack.getVisibility() == View.VISIBLE) { // если кнопка видна - значит находимся в дочернем списке
+                iconBack.callOnClick(); // кнопкой назад сможем переходит на уровень выше, к родительским элементам
+            } else {
+                super.onBackPressed();// иначе выполняем стандартную реализации кнопки Back
+            }
         }
     }
 
@@ -265,6 +273,7 @@ public class MainActivity extends AppCompatActivity
 
         if (selectedParentNode.hasChilds()) {
             this.selectedParentNode = selectedParentNode;// в selectedParentNode хранится ссылка на выбранную родительскую категорию
+            defaultType = ((Source) selectedParentNode).getOperationType();// сохраняем тип, чтобы при создании нового элемента - автоматически его прописывать
             toolbarTitle.setText(selectedParentNode.getName());// показывает выбранную категорию
             iconBack.setVisibility(View.VISIBLE);
         }

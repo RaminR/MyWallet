@@ -29,8 +29,6 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }.start();
-
-
     }
 
     private void imitateLoading() {

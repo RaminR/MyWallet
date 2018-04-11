@@ -53,5 +53,9 @@
 
     <string name="icon">Icon</string>
     <string name="no_data">No data</string>
+    <string name="title_activity_select_icon">SelectIconActivity</string>
+    <string name="title_activity_abstract_animation">AbstractAnimationActivity</string>
+
+    <string name="select_icon">Select icon</string>
 
 </resources>

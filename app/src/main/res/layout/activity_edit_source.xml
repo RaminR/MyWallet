@@ -30,6 +30,8 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_close"
                     android:tint="@color/colorPrimaryText"
+                    android:background="@drawable/ripple_oval_gray"
+                    android:padding="10dp"
 
                     />
 
@@ -39,7 +41,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center"
                     android:text="@string/editing"
-                    android:textAppearance="@android:style/TextAppearance.Material.Title" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Title"
+                    />
 
                 <ImageView
                     android:id="@+id/img_node_save"
@@ -50,7 +53,11 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:src="@drawable/ic_done"
-                    android:tint="@color/colorPrimaryText" />
+                    android:tint="@color/colorPrimaryText"
+                    android:background="@drawable/ripple_oval_gray"
+                    android:padding="10dp"
+
+                    />
 
             </RelativeLayout>
 
@@ -60,13 +67,13 @@
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
+        android:paddingTop="10dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:paddingTop="10dp">
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:id="@+id/lbl_source_name"
@@ -74,7 +81,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="@string/name"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            />
 
 
         <TextView
@@ -83,9 +91,10 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/lbl_source_name"
             android:layout_below="@id/lbl_source_name"
-            android:layout_marginTop="40dp"
             android:text="@string/icon"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            android:layout_marginTop="40dp" />
+
 
 
         <TextView
@@ -96,7 +105,9 @@
             android:layout_below="@id/tv_source_icon_label"
             android:layout_marginTop="40dp"
             android:text="@string/type"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            />
+
 
 
         <EditText
@@ -104,42 +115,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_alignBaseline="@id/lbl_source_name"
-            android:layout_alignParentRight="true"
+            android:text="value"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
 
             android:maxEms="20"
-            android:text="value"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/lbl_source_name" />
+
+
 
 
         <ImageView
             android:id="@+id/img_source_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_alignBottom="@id/tv_source_icon_label"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentRight="true"
-
-
-            android:src="@drawable/ic_empty"
-            android:tint="@color/colorSecondaryText" />
+            android:layout_alignBottom="@id/tv_source_icon_label" />
 
 
         <Spinner
             android:id="@+id/sp_source_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-
-
-            android:layout_alignTop="@id/lbl_source_type"
             android:layout_below="@id/img_source_icon"
 
-            android:text="value"
-            android:textAppearance="@android:style/Widget.Material.Light.Spinner" />
+            android:layout_alignBaseline="@id/lbl_source_type"
+            android:layout_alignParentRight="true"
 
+            android:text="value"
+            android:textAppearance="@android:style/Widget.Material.Light.Spinner"
+            />
 
     </RelativeLayout>
-
 
 </RelativeLayout>

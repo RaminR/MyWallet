@@ -9,6 +9,10 @@ public interface TreeNode extends Serializable{
 
     String getName();
 
+    String getIconName();
+
+    void setIconName(String name);
+
     void setName(String name);
 
     long getId(); // каждый элемент дерева должен иметь свой уникальный идентификатор

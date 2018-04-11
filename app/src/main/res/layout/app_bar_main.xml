@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ru.ya.rrmstu.mywallet.activities.MainActivity">
+    tools:context=".activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -31,9 +31,10 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="left"
+                    android:background="@drawable/ripple_oval_gray"
+                    android:padding="5dp"
                     android:src="@drawable/ic_arrow_back"
                     android:tint="@color/colorPrimaryText"
-
                     android:visibility="invisible" />
 
 
@@ -55,7 +56,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:paddingRight="10dp"
+                    android:background="@drawable/ripple_oval_gray"
+                    android:padding="10dp"
                     android:src="@drawable/ic_add"
                     android:tint="@color/colorPrimaryText" />
 
@@ -77,21 +79,18 @@
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_all"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:text="@string/tab_all" />
+                android:layout_height="20dp" />
 
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_income"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:text="@string/tab_income" />
+                android:layout_height="20dp" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_outcome"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:text="@string/tab_outcome" />
+                android:layout_height="20dp" />
 
 
         </android.support.design.widget.TabLayout>

@@ -112,8 +112,12 @@ public class SourceSync implements SourceDAO {
     public boolean update(Source source) throws SQLException {
         if (sourceDAO.update(source)) {
 
-            identityMap.get(source.getId()).setName(source.getName()); // данные обновлятся сразу во всех коллекциях, т.к. они ссылаются на один и тот же объект
-            // TODO также обновлять иконку
+            Source s = identityMap.get(source.getId());
+
+            // данные обновлятся сразу во всех коллекциях, т.к. они ссылаются на один и тот же объект
+            // не нужно пробегать по всем коллекциям и обновлять в них
+            s.setName(source.getName());
+            s.setIconName(source.getIconName());
 
             return true;
         }
